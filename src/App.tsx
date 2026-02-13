@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { HeroSection } from '@/sections/HeroSection';
 import { ResultSection } from '@/sections/ResultSection';
 import { FeaturesSection } from '@/sections/FeaturesSection';
-import { FooterSection } from '@/sections/FooterSection';
 import type { MoleculeData  } from '@/types/molecule';
 import { getMoleculeData } from '@/data/moleculeDatabase';
 import { parseMolecularFormula } from '@/utils/moleculeParser';
@@ -197,9 +196,6 @@ function App() {
       
       {/* 特性介绍（仅在未搜索时显示） */}
       {!hasSearched && <FeaturesSection />}
-      
-      {/* 页脚 */}
-      <FooterSection />
     </div>
   );
 }
