@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { MoleculeSearch } from '@/components/molecule/MoleculeSearch';
+import { useLanguage } from '@/i18n';
 import { Atom, Sparkles, Beaker } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -11,6 +12,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onSearch,
   isLoading = false,
 }) => {
+  const { t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
   // 背景动画
@@ -152,18 +154,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
         </div>
         
-        {/* 标题 */}
+        {/* 标题 / Title */}
         <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          <span className="text-gradient">分子结构</span>
-          <span className="text-white">，可视化呈现</span>
+          <span className="text-gradient">{t.heroTitle}</span>
         </h1>
         
-        {/* 副标题 */}
+        {/* 副标题 / Subtitle */}
         <p className="text-lg md:text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-          输入分子式，即可在几秒内获得即时的
-          <span className="text-indigo-400">3D模型</span>、
-          <span className="text-purple-400">路易斯结构式</span>
-          和详细的理化性质分析
+          {t.heroSubtitle}
         </p>
         
         {/* 搜索框 */}
@@ -185,19 +183,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           ))}
         </div>
         
-        {/* 特性标签 */}
+        {/* 特性标签 / Feature tags */}
         <div className="mt-12 flex flex-wrap justify-center gap-6 text-sm text-slate-500">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full" />
-            <span>即时3D渲染</span>
+            <span>{t.feature3DTitle}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-indigo-500 rounded-full" />
-            <span>路易斯结构式</span>
+            <span>{t.featureLewisTitle}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-purple-500 rounded-full" />
-            <span>15+理化性质</span>
+            <span>15+ {t.physicalProperties}</span>
           </div>
         </div>
       </div>

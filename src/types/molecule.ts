@@ -1,4 +1,6 @@
-// 分子数据类型定义
+// 分子数据类型定义 / Molecule Data Type Definitions
+
+export type Language = 'en' | 'zh';
 
 export interface Atom {
   id: string;
@@ -88,6 +90,41 @@ export interface Reaction {
   asProduct: { equation: string; conditions: string }[];
 }
 
+// 多语言文本 / Multilingual Text
+export interface MultilingualText {
+  en: string;
+  zh: string;
+}
+
+// 多语言字符串数组 / Multilingual String Array
+export interface MultilingualArray {
+  en: string[];
+  zh: string[];
+}
+
+// 原始分子数据（带多语言支持）/ Raw Molecule Data (with i18n support)
+export interface MoleculeDataRaw {
+  formula: string;
+  name: MultilingualText;
+  iupacName: MultilingualText;
+  smiles: string;
+  description: MultilingualText;
+  structure: MoleculeStructure;
+  electronic: ElectronicStructure;
+  physical: PhysicalProperties;
+  thermodynamic: ThermodynamicData;
+  spectral: SpectralData;
+  safety: SafetyData;
+  applications: {
+    industrial: MultilingualArray;
+    research: MultilingualArray;
+    everyday: MultilingualArray;
+  };
+  reactions: Reaction;
+  isomers?: { name: MultilingualText; smiles: string; description: MultilingualText }[];
+}
+
+// 本地化后的分子数据 / Localized Molecule Data
 export interface MoleculeData {
   formula: string;
   name: string;
@@ -128,6 +165,20 @@ export type ElementSymbol =
   | 'Md' | 'No' | 'Lr' | 'Rf' | 'Db' | 'Sg' | 'Bh' | 'Hs' | 'Mt' | 'Ds'
   | 'Rg' | 'Cn' | 'Nh' | 'Fl' | 'Mc' | 'Lv' | 'Ts' | 'Og';
 
+// 原始元素数据（带多语言支持）/ Raw Element Data (with i18n support)
+export interface ElementDataRaw {
+  symbol: ElementSymbol;
+  name: MultilingualText;
+  atomicNumber: number;
+  atomicMass: number;
+  color: string;
+  covalentRadius: number;
+  vanDerWaalsRadius: number;
+  valenceElectrons: number;
+  commonValences: number[];
+}
+
+// 本地化后的元素数据 / Localized Element Data
 export interface ElementData {
   symbol: ElementSymbol;
   name: string;

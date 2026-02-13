@@ -1,135 +1,135 @@
-import type { MoleculeData, ElementData, ElementSymbol  } from '@/types/molecule';
+import type { MoleculeDataRaw, ElementDataRaw, ElementSymbol, Language, MoleculeData, ElementData } from '@/types/molecule';
 
-// 元素周期表数据
-export const elementDatabase: Record<ElementSymbol, ElementData> = {
-  H: { symbol: 'H', name: 'Hydrogen', atomicNumber: 1, atomicMass: 1.008, color: '#FFFFFF', covalentRadius: 0.31, vanDerWaalsRadius: 1.20, valenceElectrons: 1, commonValences: [1] },
-  He: { symbol: 'He', name: 'Helium', atomicNumber: 2, atomicMass: 4.003, color: '#D9FFFF', covalentRadius: 0.28, vanDerWaalsRadius: 1.40, valenceElectrons: 2, commonValences: [0] },
-  Li: { symbol: 'Li', name: 'Lithium', atomicNumber: 3, atomicMass: 6.941, color: '#CC80FF', covalentRadius: 1.28, vanDerWaalsRadius: 1.82, valenceElectrons: 1, commonValences: [1] },
-  Be: { symbol: 'Be', name: 'Beryllium', atomicNumber: 4, atomicMass: 9.012, color: '#C2FF00', covalentRadius: 0.96, vanDerWaalsRadius: 1.53, valenceElectrons: 2, commonValences: [2] },
-  B: { symbol: 'B', name: 'Boron', atomicNumber: 5, atomicMass: 10.811, color: '#FFB5B5', covalentRadius: 0.84, vanDerWaalsRadius: 1.92, valenceElectrons: 3, commonValences: [3] },
-  C: { symbol: 'C', name: 'Carbon', atomicNumber: 6, atomicMass: 12.011, color: '#909090', covalentRadius: 0.76, vanDerWaalsRadius: 1.70, valenceElectrons: 4, commonValences: [4] },
-  N: { symbol: 'N', name: 'Nitrogen', atomicNumber: 7, atomicMass: 14.007, color: '#3050F8', covalentRadius: 0.71, vanDerWaalsRadius: 1.55, valenceElectrons: 5, commonValences: [3] },
-  O: { symbol: 'O', name: 'Oxygen', atomicNumber: 8, atomicMass: 15.999, color: '#FF0D0D', covalentRadius: 0.66, vanDerWaalsRadius: 1.52, valenceElectrons: 6, commonValences: [2] },
-  F: { symbol: 'F', name: 'Fluorine', atomicNumber: 9, atomicMass: 18.998, color: '#90E050', covalentRadius: 0.57, vanDerWaalsRadius: 1.47, valenceElectrons: 7, commonValences: [1] },
-  Ne: { symbol: 'Ne', name: 'Neon', atomicNumber: 10, atomicMass: 20.180, color: '#B3E3F5', covalentRadius: 0.58, vanDerWaalsRadius: 1.54, valenceElectrons: 8, commonValences: [0] },
-  Na: { symbol: 'Na', name: 'Sodium', atomicNumber: 11, atomicMass: 22.990, color: '#AB5CF2', covalentRadius: 1.66, vanDerWaalsRadius: 2.27, valenceElectrons: 1, commonValences: [1] },
-  Mg: { symbol: 'Mg', name: 'Magnesium', atomicNumber: 12, atomicMass: 24.305, color: '#8AFF00', covalentRadius: 1.41, vanDerWaalsRadius: 1.73, valenceElectrons: 2, commonValences: [2] },
-  Al: { symbol: 'Al', name: 'Aluminum', atomicNumber: 13, atomicMass: 26.982, color: '#BFA6A6', covalentRadius: 1.21, vanDerWaalsRadius: 1.84, valenceElectrons: 3, commonValences: [3] },
-  Si: { symbol: 'Si', name: 'Silicon', atomicNumber: 14, atomicMass: 28.086, color: '#F0C8A0', covalentRadius: 1.11, vanDerWaalsRadius: 2.10, valenceElectrons: 4, commonValences: [4] },
-  P: { symbol: 'P', name: 'Phosphorus', atomicNumber: 15, atomicMass: 30.974, color: '#FF8000', covalentRadius: 1.07, vanDerWaalsRadius: 1.80, valenceElectrons: 5, commonValences: [3, 5] },
-  S: { symbol: 'S', name: 'Sulfur', atomicNumber: 16, atomicMass: 32.065, color: '#FFFF30', covalentRadius: 1.05, vanDerWaalsRadius: 1.80, valenceElectrons: 6, commonValences: [2] },
-  Cl: { symbol: 'Cl', name: 'Chlorine', atomicNumber: 17, atomicMass: 35.453, color: '#1FF01F', covalentRadius: 1.02, vanDerWaalsRadius: 1.75, valenceElectrons: 7, commonValences: [1] },
-  Ar: { symbol: 'Ar', name: 'Argon', atomicNumber: 18, atomicMass: 39.948, color: '#80D1E3', covalentRadius: 1.06, vanDerWaalsRadius: 1.88, valenceElectrons: 8, commonValences: [0] },
-  K: { symbol: 'K', name: 'Potassium', atomicNumber: 19, atomicMass: 39.098, color: '#8F40D4', covalentRadius: 2.03, vanDerWaalsRadius: 2.75, valenceElectrons: 1, commonValences: [1] },
-  Ca: { symbol: 'Ca', name: 'Calcium', atomicNumber: 20, atomicMass: 40.078, color: '#3DFF00', covalentRadius: 1.76, vanDerWaalsRadius: 2.31, valenceElectrons: 2, commonValences: [2] },
-  Sc: { symbol: 'Sc', name: 'Scandium', atomicNumber: 21, atomicMass: 44.956, color: '#E6E6E6', covalentRadius: 1.70, vanDerWaalsRadius: 2.11, valenceElectrons: 3, commonValences: [3] },
-  Ti: { symbol: 'Ti', name: 'Titanium', atomicNumber: 22, atomicMass: 47.867, color: '#BFC2C7', covalentRadius: 1.60, vanDerWaalsRadius: 2.15, valenceElectrons: 4, commonValences: [4] },
-  V: { symbol: 'V', name: 'Vanadium', atomicNumber: 23, atomicMass: 50.942, color: '#A6A6AB', covalentRadius: 1.53, vanDerWaalsRadius: 2.05, valenceElectrons: 5, commonValences: [5] },
-  Cr: { symbol: 'Cr', name: 'Chromium', atomicNumber: 24, atomicMass: 51.996, color: '#8A99C7', covalentRadius: 1.39, vanDerWaalsRadius: 2.00, valenceElectrons: 6, commonValences: [3, 6] },
-  Mn: { symbol: 'Mn', name: 'Manganese', atomicNumber: 25, atomicMass: 54.938, color: '#9C7AC7', covalentRadius: 1.39, vanDerWaalsRadius: 2.05, valenceElectrons: 7, commonValences: [2, 4, 7] },
-  Fe: { symbol: 'Fe', name: 'Iron', atomicNumber: 26, atomicMass: 55.845, color: '#E06633', covalentRadius: 1.32, vanDerWaalsRadius: 2.05, valenceElectrons: 8, commonValences: [2, 3] },
-  Co: { symbol: 'Co', name: 'Cobalt', atomicNumber: 27, atomicMass: 58.933, color: '#F090A0', covalentRadius: 1.26, vanDerWaalsRadius: 2.00, valenceElectrons: 9, commonValences: [2, 3] },
-  Ni: { symbol: 'Ni', name: 'Nickel', atomicNumber: 28, atomicMass: 58.693, color: '#50D050', covalentRadius: 1.21, vanDerWaalsRadius: 2.00, valenceElectrons: 10, commonValences: [2] },
-  Cu: { symbol: 'Cu', name: 'Copper', atomicNumber: 29, atomicMass: 63.546, color: '#C78033', covalentRadius: 1.38, vanDerWaalsRadius: 2.00, valenceElectrons: 11, commonValences: [1, 2] },
-  Zn: { symbol: 'Zn', name: 'Zinc', atomicNumber: 30, atomicMass: 65.380, color: '#7D80B0', covalentRadius: 1.31, vanDerWaalsRadius: 2.10, valenceElectrons: 12, commonValences: [2] },
-  Ga: { symbol: 'Ga', name: 'Gallium', atomicNumber: 31, atomicMass: 69.723, color: '#C28F8F', covalentRadius: 1.26, vanDerWaalsRadius: 1.87, valenceElectrons: 13, commonValences: [3] },
-  Ge: { symbol: 'Ge', name: 'Germanium', atomicNumber: 32, atomicMass: 72.640, color: '#668F8F', covalentRadius: 1.22, vanDerWaalsRadius: 2.11, valenceElectrons: 14, commonValences: [4] },
-  As: { symbol: 'As', name: 'Arsenic', atomicNumber: 33, atomicMass: 74.922, color: '#BD80E3', covalentRadius: 1.19, vanDerWaalsRadius: 1.85, valenceElectrons: 15, commonValences: [3, 5] },
-  Se: { symbol: 'Se', name: 'Selenium', atomicNumber: 34, atomicMass: 78.960, color: '#FFA100', covalentRadius: 1.20, vanDerWaalsRadius: 1.90, valenceElectrons: 16, commonValences: [2, 4, 6] },
-  Br: { symbol: 'Br', name: 'Bromine', atomicNumber: 35, atomicMass: 79.904, color: '#A62929', covalentRadius: 1.20, vanDerWaalsRadius: 1.85, valenceElectrons: 17, commonValences: [1] },
-  Kr: { symbol: 'Kr', name: 'Krypton', atomicNumber: 36, atomicMass: 83.798, color: '#5CB8D1', covalentRadius: 1.16, vanDerWaalsRadius: 2.02, valenceElectrons: 18, commonValences: [0] },
-  Rb: { symbol: 'Rb', name: 'Rubidium', atomicNumber: 37, atomicMass: 85.468, color: '#702EB0', covalentRadius: 2.20, vanDerWaalsRadius: 3.03, valenceElectrons: 1, commonValences: [1] },
-  Sr: { symbol: 'Sr', name: 'Strontium', atomicNumber: 38, atomicMass: 87.620, color: '#00FF00', covalentRadius: 1.95, vanDerWaalsRadius: 2.49, valenceElectrons: 2, commonValences: [2] },
-  Y: { symbol: 'Y', name: 'Yttrium', atomicNumber: 39, atomicMass: 88.906, color: '#94FFFF', covalentRadius: 1.90, vanDerWaalsRadius: 2.20, valenceElectrons: 3, commonValences: [3] },
-  Zr: { symbol: 'Zr', name: 'Zirconium', atomicNumber: 40, atomicMass: 91.224, color: '#94E0E0', covalentRadius: 1.75, vanDerWaalsRadius: 2.20, valenceElectrons: 4, commonValences: [4] },
-  Nb: { symbol: 'Nb', name: 'Niobium', atomicNumber: 41, atomicMass: 92.906, color: '#73C2C9', covalentRadius: 1.64, vanDerWaalsRadius: 2.10, valenceElectrons: 5, commonValences: [5] },
-  Mo: { symbol: 'Mo', name: 'Molybdenum', atomicNumber: 42, atomicMass: 95.960, color: '#54B5B5', covalentRadius: 1.54, vanDerWaalsRadius: 2.10, valenceElectrons: 6, commonValences: [6] },
-  Tc: { symbol: 'Tc', name: 'Technetium', atomicNumber: 43, atomicMass: 98.000, color: '#3B9E9E', covalentRadius: 1.47, vanDerWaalsRadius: 2.05, valenceElectrons: 7, commonValences: [7] },
-  Ru: { symbol: 'Ru', name: 'Ruthenium', atomicNumber: 44, atomicMass: 101.070, color: '#248F8F', covalentRadius: 1.46, vanDerWaalsRadius: 2.05, valenceElectrons: 8, commonValences: [3, 4] },
-  Rh: { symbol: 'Rh', name: 'Rhodium', atomicNumber: 45, atomicMass: 102.906, color: '#0A7D8C', covalentRadius: 1.42, vanDerWaalsRadius: 2.00, valenceElectrons: 9, commonValences: [3] },
-  Pd: { symbol: 'Pd', name: 'Palladium', atomicNumber: 46, atomicMass: 106.420, color: '#006985', covalentRadius: 1.39, vanDerWaalsRadius: 2.05, valenceElectrons: 10, commonValences: [2, 4] },
-  Ag: { symbol: 'Ag', name: 'Silver', atomicNumber: 47, atomicMass: 107.868, color: '#C0C0C0', covalentRadius: 1.45, vanDerWaalsRadius: 2.10, valenceElectrons: 11, commonValences: [1] },
-  Cd: { symbol: 'Cd', name: 'Cadmium', atomicNumber: 48, atomicMass: 112.411, color: '#FFD98F', covalentRadius: 1.44, vanDerWaalsRadius: 2.20, valenceElectrons: 12, commonValences: [2] },
-  In: { symbol: 'In', name: 'Indium', atomicNumber: 49, atomicMass: 114.818, color: '#A67573', covalentRadius: 1.42, vanDerWaalsRadius: 2.20, valenceElectrons: 13, commonValences: [3] },
-  Sn: { symbol: 'Sn', name: 'Tin', atomicNumber: 50, atomicMass: 118.710, color: '#668080', covalentRadius: 1.39, vanDerWaalsRadius: 2.25, valenceElectrons: 14, commonValences: [2, 4] },
-  Sb: { symbol: 'Sb', name: 'Antimony', atomicNumber: 51, atomicMass: 121.760, color: '#9E63B5', covalentRadius: 1.39, vanDerWaalsRadius: 2.20, valenceElectrons: 15, commonValences: [3, 5] },
-  Te: { symbol: 'Te', name: 'Tellurium', atomicNumber: 52, atomicMass: 127.600, color: '#D47A00', covalentRadius: 1.38, vanDerWaalsRadius: 2.10, valenceElectrons: 16, commonValences: [2, 4, 6] },
-  I: { symbol: 'I', name: 'Iodine', atomicNumber: 53, atomicMass: 126.904, color: '#940094', covalentRadius: 1.39, vanDerWaalsRadius: 1.98, valenceElectrons: 17, commonValences: [1] },
-  Xe: { symbol: 'Xe', name: 'Xenon', atomicNumber: 54, atomicMass: 131.293, color: '#429EB0', covalentRadius: 1.40, vanDerWaalsRadius: 2.16, valenceElectrons: 18, commonValences: [0] },
-  Cs: { symbol: 'Cs', name: 'Cesium', atomicNumber: 55, atomicMass: 132.905, color: '#57178F', covalentRadius: 2.44, vanDerWaalsRadius: 3.43, valenceElectrons: 1, commonValences: [1] },
-  Ba: { symbol: 'Ba', name: 'Barium', atomicNumber: 56, atomicMass: 137.327, color: '#00C900', covalentRadius: 2.15, vanDerWaalsRadius: 2.68, valenceElectrons: 2, commonValences: [2] },
-  La: { symbol: 'La', name: 'Lanthanum', atomicNumber: 57, atomicMass: 138.905, color: '#70D4FF', covalentRadius: 2.07, vanDerWaalsRadius: 2.50, valenceElectrons: 3, commonValences: [3] },
-  Ce: { symbol: 'Ce', name: 'Cerium', atomicNumber: 58, atomicMass: 140.116, color: '#FFFFC7', covalentRadius: 2.04, vanDerWaalsRadius: 2.48, valenceElectrons: 4, commonValences: [3, 4] },
-  Pr: { symbol: 'Pr', name: 'Praseodymium', atomicNumber: 59, atomicMass: 140.908, color: '#D9FFC7', covalentRadius: 2.03, vanDerWaalsRadius: 2.47, valenceElectrons: 5, commonValences: [3] },
-  Nd: { symbol: 'Nd', name: 'Neodymium', atomicNumber: 60, atomicMass: 144.242, color: '#C7FFC7', covalentRadius: 2.01, vanDerWaalsRadius: 2.45, valenceElectrons: 6, commonValences: [3] },
-  Pm: { symbol: 'Pm', name: 'Promethium', atomicNumber: 61, atomicMass: 145.000, color: '#A3FFC7', covalentRadius: 1.99, vanDerWaalsRadius: 2.43, valenceElectrons: 7, commonValences: [3] },
-  Sm: { symbol: 'Sm', name: 'Samarium', atomicNumber: 62, atomicMass: 150.360, color: '#8FFFC7', covalentRadius: 1.98, vanDerWaalsRadius: 2.42, valenceElectrons: 8, commonValences: [3] },
-  Eu: { symbol: 'Eu', name: 'Europium', atomicNumber: 63, atomicMass: 151.964, color: '#61FFC7', covalentRadius: 1.98, vanDerWaalsRadius: 2.40, valenceElectrons: 9, commonValences: [3] },
-  Gd: { symbol: 'Gd', name: 'Gadolinium', atomicNumber: 64, atomicMass: 157.250, color: '#45FFC7', covalentRadius: 1.96, vanDerWaalsRadius: 2.38, valenceElectrons: 10, commonValences: [3] },
-  Tb: { symbol: 'Tb', name: 'Terbium', atomicNumber: 65, atomicMass: 158.925, color: '#30FFC7', covalentRadius: 1.94, vanDerWaalsRadius: 2.37, valenceElectrons: 11, commonValences: [3] },
-  Dy: { symbol: 'Dy', name: 'Dysprosium', atomicNumber: 66, atomicMass: 162.500, color: '#1FFFC7', covalentRadius: 1.92, vanDerWaalsRadius: 2.35, valenceElectrons: 12, commonValences: [3] },
-  Ho: { symbol: 'Ho', name: 'Holmium', atomicNumber: 67, atomicMass: 164.930, color: '#00FF9C', covalentRadius: 1.92, vanDerWaalsRadius: 2.33, valenceElectrons: 13, commonValences: [3] },
-  Er: { symbol: 'Er', name: 'Erbium', atomicNumber: 68, atomicMass: 167.259, color: '#00E675', covalentRadius: 1.89, vanDerWaalsRadius: 2.32, valenceElectrons: 14, commonValences: [3] },
-  Tm: { symbol: 'Tm', name: 'Thulium', atomicNumber: 69, atomicMass: 168.934, color: '#00D452', covalentRadius: 1.90, vanDerWaalsRadius: 2.30, valenceElectrons: 15, commonValences: [3] },
-  Yb: { symbol: 'Yb', name: 'Ytterbium', atomicNumber: 70, atomicMass: 173.054, color: '#00BF38', covalentRadius: 1.87, vanDerWaalsRadius: 2.28, valenceElectrons: 16, commonValences: [3] },
-  Lu: { symbol: 'Lu', name: 'Lutetium', atomicNumber: 71, atomicMass: 174.967, color: '#00AB24', covalentRadius: 1.87, vanDerWaalsRadius: 2.27, valenceElectrons: 17, commonValences: [3] },
-  Hf: { symbol: 'Hf', name: 'Hafnium', atomicNumber: 72, atomicMass: 178.490, color: '#4DC2FF', covalentRadius: 1.75, vanDerWaalsRadius: 2.25, valenceElectrons: 4, commonValences: [4] },
-  Ta: { symbol: 'Ta', name: 'Tantalum', atomicNumber: 73, atomicMass: 180.948, color: '#4DA6FF', covalentRadius: 1.70, vanDerWaalsRadius: 2.20, valenceElectrons: 5, commonValences: [5] },
-  W: { symbol: 'W', name: 'Tungsten', atomicNumber: 74, atomicMass: 183.840, color: '#2194D6', covalentRadius: 1.62, vanDerWaalsRadius: 2.10, valenceElectrons: 6, commonValences: [6] },
-  Re: { symbol: 'Re', name: 'Rhenium', atomicNumber: 75, atomicMass: 186.207, color: '#267DAB', covalentRadius: 1.51, vanDerWaalsRadius: 2.05, valenceElectrons: 7, commonValences: [7] },
-  Os: { symbol: 'Os', name: 'Osmium', atomicNumber: 76, atomicMass: 190.230, color: '#266696', covalentRadius: 1.44, vanDerWaalsRadius: 2.00, valenceElectrons: 8, commonValences: [4] },
-  Ir: { symbol: 'Ir', name: 'Iridium', atomicNumber: 77, atomicMass: 192.217, color: '#175487', covalentRadius: 1.41, vanDerWaalsRadius: 2.00, valenceElectrons: 9, commonValences: [4] },
-  Pt: { symbol: 'Pt', name: 'Platinum', atomicNumber: 78, atomicMass: 195.084, color: '#D0D0E0', covalentRadius: 1.36, vanDerWaalsRadius: 2.05, valenceElectrons: 10, commonValences: [4] },
-  Au: { symbol: 'Au', name: 'Gold', atomicNumber: 79, atomicMass: 196.967, color: '#FFD123', covalentRadius: 1.36, vanDerWaalsRadius: 2.10, valenceElectrons: 11, commonValences: [3] },
-  Hg: { symbol: 'Hg', name: 'Mercury', atomicNumber: 80, atomicMass: 200.590, color: '#B8B8D0', covalentRadius: 1.32, vanDerWaalsRadius: 2.05, valenceElectrons: 12, commonValences: [2] },
-  Tl: { symbol: 'Tl', name: 'Thallium', atomicNumber: 81, atomicMass: 204.383, color: '#A6544D', covalentRadius: 1.45, vanDerWaalsRadius: 2.20, valenceElectrons: 13, commonValences: [1, 3] },
-  Pb: { symbol: 'Pb', name: 'Lead', atomicNumber: 82, atomicMass: 207.200, color: '#575961', covalentRadius: 1.46, vanDerWaalsRadius: 2.30, valenceElectrons: 14, commonValences: [2, 4] },
-  Bi: { symbol: 'Bi', name: 'Bismuth', atomicNumber: 83, atomicMass: 208.980, color: '#9E4FB5', covalentRadius: 1.48, vanDerWaalsRadius: 2.30, valenceElectrons: 15, commonValences: [3] },
-  Po: { symbol: 'Po', name: 'Polonium', atomicNumber: 84, atomicMass: 209.000, color: '#AB5C00', covalentRadius: 1.40, vanDerWaalsRadius: 2.00, valenceElectrons: 16, commonValences: [2, 4] },
-  At: { symbol: 'At', name: 'Astatine', atomicNumber: 85, atomicMass: 210.000, color: '#754F45', covalentRadius: 1.50, vanDerWaalsRadius: 2.00, valenceElectrons: 17, commonValences: [1] },
-  Rn: { symbol: 'Rn', name: 'Radon', atomicNumber: 86, atomicMass: 222.000, color: '#428296', covalentRadius: 1.50, vanDerWaalsRadius: 2.00, valenceElectrons: 18, commonValences: [0] },
-  Fr: { symbol: 'Fr', name: 'Francium', atomicNumber: 87, atomicMass: 223.000, color: '#420066', covalentRadius: 2.60, vanDerWaalsRadius: 2.00, valenceElectrons: 1, commonValences: [1] },
-  Ra: { symbol: 'Ra', name: 'Radium', atomicNumber: 88, atomicMass: 226.000, color: '#007D00', covalentRadius: 2.21, vanDerWaalsRadius: 2.00, valenceElectrons: 2, commonValences: [2] },
-  Ac: { symbol: 'Ac', name: 'Actinium', atomicNumber: 89, atomicMass: 227.000, color: '#70ABFA', covalentRadius: 2.15, vanDerWaalsRadius: 2.00, valenceElectrons: 3, commonValences: [3] },
-  Th: { symbol: 'Th', name: 'Thorium', atomicNumber: 90, atomicMass: 232.038, color: '#00BAFF', covalentRadius: 2.06, vanDerWaalsRadius: 2.00, valenceElectrons: 4, commonValences: [4] },
-  Pa: { symbol: 'Pa', name: 'Protactinium', atomicNumber: 91, atomicMass: 231.036, color: '#00A1FF', covalentRadius: 2.00, vanDerWaalsRadius: 2.00, valenceElectrons: 5, commonValences: [5] },
-  U: { symbol: 'U', name: 'Uranium', atomicNumber: 92, atomicMass: 238.029, color: '#008FFF', covalentRadius: 1.96, vanDerWaalsRadius: 2.00, valenceElectrons: 6, commonValences: [6] },
-  Np: { symbol: 'Np', name: 'Neptunium', atomicNumber: 93, atomicMass: 237.000, color: '#0080FF', covalentRadius: 1.90, vanDerWaalsRadius: 2.00, valenceElectrons: 7, commonValences: [5] },
-  Pu: { symbol: 'Pu', name: 'Plutonium', atomicNumber: 94, atomicMass: 244.000, color: '#006BFF', covalentRadius: 1.87, vanDerWaalsRadius: 2.00, valenceElectrons: 8, commonValences: [4] },
-  Am: { symbol: 'Am', name: 'Americium', atomicNumber: 95, atomicMass: 243.000, color: '#545CF2', covalentRadius: 1.80, vanDerWaalsRadius: 2.00, valenceElectrons: 9, commonValences: [3] },
-  Cm: { symbol: 'Cm', name: 'Curium', atomicNumber: 96, atomicMass: 247.000, color: '#785CE3', covalentRadius: 1.69, vanDerWaalsRadius: 2.00, valenceElectrons: 10, commonValences: [3] },
-  Bk: { symbol: 'Bk', name: 'Berkelium', atomicNumber: 97, atomicMass: 247.000, color: '#8A4FE3', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 11, commonValences: [3] },
-  Cf: { symbol: 'Cf', name: 'Californium', atomicNumber: 98, atomicMass: 251.000, color: '#A136D4', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 12, commonValences: [3] },
-  Es: { symbol: 'Es', name: 'Einsteinium', atomicNumber: 99, atomicMass: 252.000, color: '#B31FD4', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 13, commonValences: [3] },
-  Fm: { symbol: 'Fm', name: 'Fermium', atomicNumber: 100, atomicMass: 257.000, color: '#B31FBA', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 14, commonValences: [3] },
-  Md: { symbol: 'Md', name: 'Mendelevium', atomicNumber: 101, atomicMass: 258.000, color: '#B30DA6', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 15, commonValences: [3] },
-  No: { symbol: 'No', name: 'Nobelium', atomicNumber: 102, atomicMass: 259.000, color: '#BD0D87', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 16, commonValences: [3] },
-  Lr: { symbol: 'Lr', name: 'Lawrencium', atomicNumber: 103, atomicMass: 262.000, color: '#C70066', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 17, commonValences: [3] },
-  Rf: { symbol: 'Rf', name: 'Rutherfordium', atomicNumber: 104, atomicMass: 267.000, color: '#CC0059', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 4, commonValences: [4] },
-  Db: { symbol: 'Db', name: 'Dubnium', atomicNumber: 105, atomicMass: 268.000, color: '#D1004F', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 5, commonValences: [5] },
-  Sg: { symbol: 'Sg', name: 'Seaborgium', atomicNumber: 106, atomicMass: 271.000, color: '#D90045', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 6, commonValences: [6] },
-  Bh: { symbol: 'Bh', name: 'Bohrium', atomicNumber: 107, atomicMass: 272.000, color: '#E00038', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 7, commonValences: [7] },
-  Hs: { symbol: 'Hs', name: 'Hassium', atomicNumber: 108, atomicMass: 270.000, color: '#E6002E', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 8, commonValences: [8] },
-  Mt: { symbol: 'Mt', name: 'Meitnerium', atomicNumber: 109, atomicMass: 276.000, color: '#EB0026', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 9, commonValences: [9] },
-  Ds: { symbol: 'Ds', name: 'Darmstadtium', atomicNumber: 110, atomicMass: 281.000, color: '#FF1493', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 10, commonValences: [10] },
-  Rg: { symbol: 'Rg', name: 'Roentgenium', atomicNumber: 111, atomicMass: 280.000, color: '#FF69B4', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 11, commonValences: [11] },
-  Cn: { symbol: 'Cn', name: 'Copernicium', atomicNumber: 112, atomicMass: 285.000, color: '#FFB6C1', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 12, commonValences: [12] },
-  Nh: { symbol: 'Nh', name: 'Nihonium', atomicNumber: 113, atomicMass: 284.000, color: '#FFC0CB', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 13, commonValences: [13] },
-  Fl: { symbol: 'Fl', name: 'Flerovium', atomicNumber: 114, atomicMass: 289.000, color: '#FFD1DC', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 14, commonValences: [14] },
-  Mc: { symbol: 'Mc', name: 'Moscovium', atomicNumber: 115, atomicMass: 288.000, color: '#FFDAB9', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 15, commonValences: [15] },
-  Lv: { symbol: 'Lv', name: 'Livermorium', atomicNumber: 116, atomicMass: 293.000, color: '#FFE4B5', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 16, commonValences: [16] },
-  Ts: { symbol: 'Ts', name: 'Tennessine', atomicNumber: 117, atomicMass: 294.000, color: '#FFE4E1', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 17, commonValences: [17] },
-  Og: { symbol: 'Og', name: 'Oganesson', atomicNumber: 118, atomicMass: 294.000, color: '#FFF0F5', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 18, commonValences: [18] },
+// 元素周期表数据 / Element Periodic Table Data
+export const elementDatabase: Record<ElementSymbol, ElementDataRaw> = {
+  H: { symbol: 'H', name: { en: 'Hydrogen', zh: '氢' }, atomicNumber: 1, atomicMass: 1.008, color: '#FFFFFF', covalentRadius: 0.31, vanDerWaalsRadius: 1.20, valenceElectrons: 1, commonValences: [1] },
+  He: { symbol: 'He', name: { en: 'Helium', zh: '氦' }, atomicNumber: 2, atomicMass: 4.003, color: '#D9FFFF', covalentRadius: 0.28, vanDerWaalsRadius: 1.40, valenceElectrons: 2, commonValences: [0] },
+  Li: { symbol: 'Li', name: { en: 'Lithium', zh: '锂' }, atomicNumber: 3, atomicMass: 6.941, color: '#CC80FF', covalentRadius: 1.28, vanDerWaalsRadius: 1.82, valenceElectrons: 1, commonValences: [1] },
+  Be: { symbol: 'Be', name: { en: 'Beryllium', zh: '铍' }, atomicNumber: 4, atomicMass: 9.012, color: '#C2FF00', covalentRadius: 0.96, vanDerWaalsRadius: 1.53, valenceElectrons: 2, commonValences: [2] },
+  B: { symbol: 'B', name: { en: 'Boron', zh: '硼' }, atomicNumber: 5, atomicMass: 10.811, color: '#FFB5B5', covalentRadius: 0.84, vanDerWaalsRadius: 1.92, valenceElectrons: 3, commonValences: [3] },
+  C: { symbol: 'C', name: { en: 'Carbon', zh: '碳' }, atomicNumber: 6, atomicMass: 12.011, color: '#909090', covalentRadius: 0.76, vanDerWaalsRadius: 1.70, valenceElectrons: 4, commonValences: [4] },
+  N: { symbol: 'N', name: { en: 'Nitrogen', zh: '氮' }, atomicNumber: 7, atomicMass: 14.007, color: '#3050F8', covalentRadius: 0.71, vanDerWaalsRadius: 1.55, valenceElectrons: 5, commonValences: [3] },
+  O: { symbol: 'O', name: { en: 'Oxygen', zh: '氧' }, atomicNumber: 8, atomicMass: 15.999, color: '#FF0D0D', covalentRadius: 0.66, vanDerWaalsRadius: 1.52, valenceElectrons: 6, commonValences: [2] },
+  F: { symbol: 'F', name: { en: 'Fluorine', zh: '氟' }, atomicNumber: 9, atomicMass: 18.998, color: '#90E050', covalentRadius: 0.57, vanDerWaalsRadius: 1.47, valenceElectrons: 7, commonValences: [1] },
+  Ne: { symbol: 'Ne', name: { en: 'Neon', zh: '氖' }, atomicNumber: 10, atomicMass: 20.180, color: '#B3E3F5', covalentRadius: 0.58, vanDerWaalsRadius: 1.54, valenceElectrons: 8, commonValences: [0] },
+  Na: { symbol: 'Na', name: { en: 'Sodium', zh: '钠' }, atomicNumber: 11, atomicMass: 22.990, color: '#AB5CF2', covalentRadius: 1.66, vanDerWaalsRadius: 2.27, valenceElectrons: 1, commonValences: [1] },
+  Mg: { symbol: 'Mg', name: { en: 'Magnesium', zh: '镁' }, atomicNumber: 12, atomicMass: 24.305, color: '#8AFF00', covalentRadius: 1.41, vanDerWaalsRadius: 1.73, valenceElectrons: 2, commonValences: [2] },
+  Al: { symbol: 'Al', name: { en: 'Aluminum', zh: '铝' }, atomicNumber: 13, atomicMass: 26.982, color: '#BFA6A6', covalentRadius: 1.21, vanDerWaalsRadius: 1.84, valenceElectrons: 3, commonValences: [3] },
+  Si: { symbol: 'Si', name: { en: 'Silicon', zh: '硅' }, atomicNumber: 14, atomicMass: 28.086, color: '#F0C8A0', covalentRadius: 1.11, vanDerWaalsRadius: 2.10, valenceElectrons: 4, commonValences: [4] },
+  P: { symbol: 'P', name: { en: 'Phosphorus', zh: '磷' }, atomicNumber: 15, atomicMass: 30.974, color: '#FF8000', covalentRadius: 1.07, vanDerWaalsRadius: 1.80, valenceElectrons: 5, commonValences: [3, 5] },
+  S: { symbol: 'S', name: { en: 'Sulfur', zh: '硫' }, atomicNumber: 16, atomicMass: 32.065, color: '#FFFF30', covalentRadius: 1.05, vanDerWaalsRadius: 1.80, valenceElectrons: 6, commonValences: [2] },
+  Cl: { symbol: 'Cl', name: { en: 'Chlorine', zh: '氯' }, atomicNumber: 17, atomicMass: 35.453, color: '#1FF01F', covalentRadius: 1.02, vanDerWaalsRadius: 1.75, valenceElectrons: 7, commonValences: [1] },
+  Ar: { symbol: 'Ar', name: { en: 'Argon', zh: '氩' }, atomicNumber: 18, atomicMass: 39.948, color: '#80D1E3', covalentRadius: 1.06, vanDerWaalsRadius: 1.88, valenceElectrons: 8, commonValences: [0] },
+  K: { symbol: 'K', name: { en: 'Potassium', zh: '钾' }, atomicNumber: 19, atomicMass: 39.098, color: '#8F40D4', covalentRadius: 2.03, vanDerWaalsRadius: 2.75, valenceElectrons: 1, commonValences: [1] },
+  Ca: { symbol: 'Ca', name: { en: 'Calcium', zh: '钙' }, atomicNumber: 20, atomicMass: 40.078, color: '#3DFF00', covalentRadius: 1.76, vanDerWaalsRadius: 2.31, valenceElectrons: 2, commonValences: [2] },
+  Sc: { symbol: 'Sc', name: { en: 'Scandium', zh: '钪' }, atomicNumber: 21, atomicMass: 44.956, color: '#E6E6E6', covalentRadius: 1.70, vanDerWaalsRadius: 2.11, valenceElectrons: 3, commonValences: [3] },
+  Ti: { symbol: 'Ti', name: { en: 'Titanium', zh: '钛' }, atomicNumber: 22, atomicMass: 47.867, color: '#BFC2C7', covalentRadius: 1.60, vanDerWaalsRadius: 2.15, valenceElectrons: 4, commonValences: [4] },
+  V: { symbol: 'V', name: { en: 'Vanadium', zh: '钒' }, atomicNumber: 23, atomicMass: 50.942, color: '#A6A6AB', covalentRadius: 1.53, vanDerWaalsRadius: 2.05, valenceElectrons: 5, commonValences: [5] },
+  Cr: { symbol: 'Cr', name: { en: 'Chromium', zh: '铬' }, atomicNumber: 24, atomicMass: 51.996, color: '#8A99C7', covalentRadius: 1.39, vanDerWaalsRadius: 2.00, valenceElectrons: 6, commonValences: [3, 6] },
+  Mn: { symbol: 'Mn', name: { en: 'Manganese', zh: '锰' }, atomicNumber: 25, atomicMass: 54.938, color: '#9C7AC7', covalentRadius: 1.39, vanDerWaalsRadius: 2.05, valenceElectrons: 7, commonValences: [2, 4, 7] },
+  Fe: { symbol: 'Fe', name: { en: 'Iron', zh: '铁' }, atomicNumber: 26, atomicMass: 55.845, color: '#E06633', covalentRadius: 1.32, vanDerWaalsRadius: 2.05, valenceElectrons: 8, commonValences: [2, 3] },
+  Co: { symbol: 'Co', name: { en: 'Cobalt', zh: '钴' }, atomicNumber: 27, atomicMass: 58.933, color: '#F090A0', covalentRadius: 1.26, vanDerWaalsRadius: 2.00, valenceElectrons: 9, commonValences: [2, 3] },
+  Ni: { symbol: 'Ni', name: { en: 'Nickel', zh: '镍' }, atomicNumber: 28, atomicMass: 58.693, color: '#50D050', covalentRadius: 1.21, vanDerWaalsRadius: 2.00, valenceElectrons: 10, commonValences: [2] },
+  Cu: { symbol: 'Cu', name: { en: 'Copper', zh: '铜' }, atomicNumber: 29, atomicMass: 63.546, color: '#C78033', covalentRadius: 1.38, vanDerWaalsRadius: 2.00, valenceElectrons: 11, commonValences: [1, 2] },
+  Zn: { symbol: 'Zn', name: { en: 'Zinc', zh: '锌' }, atomicNumber: 30, atomicMass: 65.380, color: '#7D80B0', covalentRadius: 1.31, vanDerWaalsRadius: 2.10, valenceElectrons: 12, commonValences: [2] },
+  Ga: { symbol: 'Ga', name: { en: 'Gallium', zh: '镓' }, atomicNumber: 31, atomicMass: 69.723, color: '#C28F8F', covalentRadius: 1.26, vanDerWaalsRadius: 1.87, valenceElectrons: 13, commonValences: [3] },
+  Ge: { symbol: 'Ge', name: { en: 'Germanium', zh: '锗' }, atomicNumber: 32, atomicMass: 72.640, color: '#668F8F', covalentRadius: 1.22, vanDerWaalsRadius: 2.11, valenceElectrons: 14, commonValences: [4] },
+  As: { symbol: 'As', name: { en: 'Arsenic', zh: '砷' }, atomicNumber: 33, atomicMass: 74.922, color: '#BD80E3', covalentRadius: 1.19, vanDerWaalsRadius: 1.85, valenceElectrons: 15, commonValences: [3, 5] },
+  Se: { symbol: 'Se', name: { en: 'Selenium', zh: '硒' }, atomicNumber: 34, atomicMass: 78.960, color: '#FFA100', covalentRadius: 1.20, vanDerWaalsRadius: 1.90, valenceElectrons: 16, commonValences: [2, 4, 6] },
+  Br: { symbol: 'Br', name: { en: 'Bromine', zh: '溴' }, atomicNumber: 35, atomicMass: 79.904, color: '#A62929', covalentRadius: 1.20, vanDerWaalsRadius: 1.85, valenceElectrons: 17, commonValences: [1] },
+  Kr: { symbol: 'Kr', name: { en: 'Krypton', zh: '氪' }, atomicNumber: 36, atomicMass: 83.798, color: '#5CB8D1', covalentRadius: 1.16, vanDerWaalsRadius: 2.02, valenceElectrons: 18, commonValences: [0] },
+  Rb: { symbol: 'Rb', name: { en: 'Rubidium', zh: '铷' }, atomicNumber: 37, atomicMass: 85.468, color: '#702EB0', covalentRadius: 2.20, vanDerWaalsRadius: 3.03, valenceElectrons: 1, commonValences: [1] },
+  Sr: { symbol: 'Sr', name: { en: 'Strontium', zh: '锶' }, atomicNumber: 38, atomicMass: 87.620, color: '#00FF00', covalentRadius: 1.95, vanDerWaalsRadius: 2.49, valenceElectrons: 2, commonValences: [2] },
+  Y: { symbol: 'Y', name: { en: 'Yttrium', zh: '钇' }, atomicNumber: 39, atomicMass: 88.906, color: '#94FFFF', covalentRadius: 1.90, vanDerWaalsRadius: 2.20, valenceElectrons: 3, commonValences: [3] },
+  Zr: { symbol: 'Zr', name: { en: 'Zirconium', zh: '锆' }, atomicNumber: 40, atomicMass: 91.224, color: '#94E0E0', covalentRadius: 1.75, vanDerWaalsRadius: 2.20, valenceElectrons: 4, commonValences: [4] },
+  Nb: { symbol: 'Nb', name: { en: 'Niobium', zh: '铌' }, atomicNumber: 41, atomicMass: 92.906, color: '#73C2C9', covalentRadius: 1.64, vanDerWaalsRadius: 2.10, valenceElectrons: 5, commonValences: [5] },
+  Mo: { symbol: 'Mo', name: { en: 'Molybdenum', zh: '钼' }, atomicNumber: 42, atomicMass: 95.960, color: '#54B5B5', covalentRadius: 1.54, vanDerWaalsRadius: 2.10, valenceElectrons: 6, commonValences: [6] },
+  Tc: { symbol: 'Tc', name: { en: 'Technetium', zh: '锝' }, atomicNumber: 43, atomicMass: 98.000, color: '#3B9E9E', covalentRadius: 1.47, vanDerWaalsRadius: 2.05, valenceElectrons: 7, commonValences: [7] },
+  Ru: { symbol: 'Ru', name: { en: 'Ruthenium', zh: '钌' }, atomicNumber: 44, atomicMass: 101.070, color: '#248F8F', covalentRadius: 1.46, vanDerWaalsRadius: 2.05, valenceElectrons: 8, commonValences: [3, 4] },
+  Rh: { symbol: 'Rh', name: { en: 'Rhodium', zh: '铑' }, atomicNumber: 45, atomicMass: 102.906, color: '#0A7D8C', covalentRadius: 1.42, vanDerWaalsRadius: 2.00, valenceElectrons: 9, commonValences: [3] },
+  Pd: { symbol: 'Pd', name: { en: 'Palladium', zh: '钯' }, atomicNumber: 46, atomicMass: 106.420, color: '#006985', covalentRadius: 1.39, vanDerWaalsRadius: 2.05, valenceElectrons: 10, commonValences: [2, 4] },
+  Ag: { symbol: 'Ag', name: { en: 'Silver', zh: '银' }, atomicNumber: 47, atomicMass: 107.868, color: '#C0C0C0', covalentRadius: 1.45, vanDerWaalsRadius: 2.10, valenceElectrons: 11, commonValences: [1] },
+  Cd: { symbol: 'Cd', name: { en: 'Cadmium', zh: '镉' }, atomicNumber: 48, atomicMass: 112.411, color: '#FFD98F', covalentRadius: 1.44, vanDerWaalsRadius: 2.20, valenceElectrons: 12, commonValences: [2] },
+  In: { symbol: 'In', name: { en: 'Indium', zh: '铟' }, atomicNumber: 49, atomicMass: 114.818, color: '#A67573', covalentRadius: 1.42, vanDerWaalsRadius: 2.20, valenceElectrons: 13, commonValences: [3] },
+  Sn: { symbol: 'Sn', name: { en: 'Tin', zh: '锡' }, atomicNumber: 50, atomicMass: 118.710, color: '#668080', covalentRadius: 1.39, vanDerWaalsRadius: 2.25, valenceElectrons: 14, commonValences: [2, 4] },
+  Sb: { symbol: 'Sb', name: { en: 'Antimony', zh: '锑' }, atomicNumber: 51, atomicMass: 121.760, color: '#9E63B5', covalentRadius: 1.39, vanDerWaalsRadius: 2.20, valenceElectrons: 15, commonValences: [3, 5] },
+  Te: { symbol: 'Te', name: { en: 'Tellurium', zh: '碲' }, atomicNumber: 52, atomicMass: 127.600, color: '#D47A00', covalentRadius: 1.38, vanDerWaalsRadius: 2.10, valenceElectrons: 16, commonValences: [2, 4, 6] },
+  I: { symbol: 'I', name: { en: 'Iodine', zh: '碘' }, atomicNumber: 53, atomicMass: 126.904, color: '#940094', covalentRadius: 1.39, vanDerWaalsRadius: 1.98, valenceElectrons: 17, commonValences: [1] },
+  Xe: { symbol: 'Xe', name: { en: 'Xenon', zh: '氙' }, atomicNumber: 54, atomicMass: 131.293, color: '#429EB0', covalentRadius: 1.40, vanDerWaalsRadius: 2.16, valenceElectrons: 18, commonValences: [0] },
+  Cs: { symbol: 'Cs', name: { en: 'Cesium', zh: '铯' }, atomicNumber: 55, atomicMass: 132.905, color: '#57178F', covalentRadius: 2.44, vanDerWaalsRadius: 3.43, valenceElectrons: 1, commonValences: [1] },
+  Ba: { symbol: 'Ba', name: { en: 'Barium', zh: '钡' }, atomicNumber: 56, atomicMass: 137.327, color: '#00C900', covalentRadius: 2.15, vanDerWaalsRadius: 2.68, valenceElectrons: 2, commonValences: [2] },
+  La: { symbol: 'La', name: { en: 'Lanthanum', zh: '镧' }, atomicNumber: 57, atomicMass: 138.905, color: '#70D4FF', covalentRadius: 2.07, vanDerWaalsRadius: 2.50, valenceElectrons: 3, commonValences: [3] },
+  Ce: { symbol: 'Ce', name: { en: 'Cerium', zh: '铈' }, atomicNumber: 58, atomicMass: 140.116, color: '#FFFFC7', covalentRadius: 2.04, vanDerWaalsRadius: 2.48, valenceElectrons: 4, commonValences: [3, 4] },
+  Pr: { symbol: 'Pr', name: { en: 'Praseodymium', zh: '镨' }, atomicNumber: 59, atomicMass: 140.908, color: '#D9FFC7', covalentRadius: 2.03, vanDerWaalsRadius: 2.47, valenceElectrons: 5, commonValences: [3] },
+  Nd: { symbol: 'Nd', name: { en: 'Neodymium', zh: '钕' }, atomicNumber: 60, atomicMass: 144.242, color: '#C7FFC7', covalentRadius: 2.01, vanDerWaalsRadius: 2.45, valenceElectrons: 6, commonValences: [3] },
+  Pm: { symbol: 'Pm', name: { en: 'Promethium', zh: '钷' }, atomicNumber: 61, atomicMass: 145.000, color: '#A3FFC7', covalentRadius: 1.99, vanDerWaalsRadius: 2.43, valenceElectrons: 7, commonValences: [3] },
+  Sm: { symbol: 'Sm', name: { en: 'Samarium', zh: '钐' }, atomicNumber: 62, atomicMass: 150.360, color: '#8FFFC7', covalentRadius: 1.98, vanDerWaalsRadius: 2.42, valenceElectrons: 8, commonValences: [3] },
+  Eu: { symbol: 'Eu', name: { en: 'Europium', zh: '铕' }, atomicNumber: 63, atomicMass: 151.964, color: '#61FFC7', covalentRadius: 1.98, vanDerWaalsRadius: 2.40, valenceElectrons: 9, commonValences: [3] },
+  Gd: { symbol: 'Gd', name: { en: 'Gadolinium', zh: '钆' }, atomicNumber: 64, atomicMass: 157.250, color: '#45FFC7', covalentRadius: 1.96, vanDerWaalsRadius: 2.38, valenceElectrons: 10, commonValences: [3] },
+  Tb: { symbol: 'Tb', name: { en: 'Terbium', zh: '铽' }, atomicNumber: 65, atomicMass: 158.925, color: '#30FFC7', covalentRadius: 1.94, vanDerWaalsRadius: 2.37, valenceElectrons: 11, commonValences: [3] },
+  Dy: { symbol: 'Dy', name: { en: 'Dysprosium', zh: '镝' }, atomicNumber: 66, atomicMass: 162.500, color: '#1FFFC7', covalentRadius: 1.92, vanDerWaalsRadius: 2.35, valenceElectrons: 12, commonValences: [3] },
+  Ho: { symbol: 'Ho', name: { en: 'Holmium', zh: '钬' }, atomicNumber: 67, atomicMass: 164.930, color: '#00FF9C', covalentRadius: 1.92, vanDerWaalsRadius: 2.33, valenceElectrons: 13, commonValences: [3] },
+  Er: { symbol: 'Er', name: { en: 'Erbium', zh: '铒' }, atomicNumber: 68, atomicMass: 167.259, color: '#00E675', covalentRadius: 1.89, vanDerWaalsRadius: 2.32, valenceElectrons: 14, commonValences: [3] },
+  Tm: { symbol: 'Tm', name: { en: 'Thulium', zh: '铥' }, atomicNumber: 69, atomicMass: 168.934, color: '#00D452', covalentRadius: 1.90, vanDerWaalsRadius: 2.30, valenceElectrons: 15, commonValences: [3] },
+  Yb: { symbol: 'Yb', name: { en: 'Ytterbium', zh: '镱' }, atomicNumber: 70, atomicMass: 173.054, color: '#00BF38', covalentRadius: 1.87, vanDerWaalsRadius: 2.28, valenceElectrons: 16, commonValences: [3] },
+  Lu: { symbol: 'Lu', name: { en: 'Lutetium', zh: '镥' }, atomicNumber: 71, atomicMass: 174.967, color: '#00AB24', covalentRadius: 1.87, vanDerWaalsRadius: 2.27, valenceElectrons: 17, commonValences: [3] },
+  Hf: { symbol: 'Hf', name: { en: 'Hafnium', zh: '铪' }, atomicNumber: 72, atomicMass: 178.490, color: '#4DC2FF', covalentRadius: 1.75, vanDerWaalsRadius: 2.25, valenceElectrons: 4, commonValences: [4] },
+  Ta: { symbol: 'Ta', name: { en: 'Tantalum', zh: '钽' }, atomicNumber: 73, atomicMass: 180.948, color: '#4DA6FF', covalentRadius: 1.70, vanDerWaalsRadius: 2.20, valenceElectrons: 5, commonValences: [5] },
+  W: { symbol: 'W', name: { en: 'Tungsten', zh: '钨' }, atomicNumber: 74, atomicMass: 183.840, color: '#2194D6', covalentRadius: 1.62, vanDerWaalsRadius: 2.10, valenceElectrons: 6, commonValences: [6] },
+  Re: { symbol: 'Re', name: { en: 'Rhenium', zh: '铼' }, atomicNumber: 75, atomicMass: 186.207, color: '#267DAB', covalentRadius: 1.51, vanDerWaalsRadius: 2.05, valenceElectrons: 7, commonValences: [7] },
+  Os: { symbol: 'Os', name: { en: 'Osmium', zh: '锇' }, atomicNumber: 76, atomicMass: 190.230, color: '#266696', covalentRadius: 1.44, vanDerWaalsRadius: 2.00, valenceElectrons: 8, commonValences: [4] },
+  Ir: { symbol: 'Ir', name: { en: 'Iridium', zh: '铱' }, atomicNumber: 77, atomicMass: 192.217, color: '#175487', covalentRadius: 1.41, vanDerWaalsRadius: 2.00, valenceElectrons: 9, commonValences: [4] },
+  Pt: { symbol: 'Pt', name: { en: 'Platinum', zh: '铂' }, atomicNumber: 78, atomicMass: 195.084, color: '#D0D0E0', covalentRadius: 1.36, vanDerWaalsRadius: 2.05, valenceElectrons: 10, commonValences: [4] },
+  Au: { symbol: 'Au', name: { en: 'Gold', zh: '金' }, atomicNumber: 79, atomicMass: 196.967, color: '#FFD123', covalentRadius: 1.36, vanDerWaalsRadius: 2.10, valenceElectrons: 11, commonValences: [3] },
+  Hg: { symbol: 'Hg', name: { en: 'Mercury', zh: '汞' }, atomicNumber: 80, atomicMass: 200.590, color: '#B8B8D0', covalentRadius: 1.32, vanDerWaalsRadius: 2.05, valenceElectrons: 12, commonValences: [2] },
+  Tl: { symbol: 'Tl', name: { en: 'Thallium', zh: '铊' }, atomicNumber: 81, atomicMass: 204.383, color: '#A6544D', covalentRadius: 1.45, vanDerWaalsRadius: 2.20, valenceElectrons: 13, commonValences: [1, 3] },
+  Pb: { symbol: 'Pb', name: { en: 'Lead', zh: '铅' }, atomicNumber: 82, atomicMass: 207.200, color: '#575961', covalentRadius: 1.46, vanDerWaalsRadius: 2.30, valenceElectrons: 14, commonValences: [2, 4] },
+  Bi: { symbol: 'Bi', name: { en: 'Bismuth', zh: '铋' }, atomicNumber: 83, atomicMass: 208.980, color: '#9E4FB5', covalentRadius: 1.48, vanDerWaalsRadius: 2.30, valenceElectrons: 15, commonValences: [3] },
+  Po: { symbol: 'Po', name: { en: 'Polonium', zh: '钋' }, atomicNumber: 84, atomicMass: 209.000, color: '#AB5C00', covalentRadius: 1.40, vanDerWaalsRadius: 2.00, valenceElectrons: 16, commonValences: [2, 4] },
+  At: { symbol: 'At', name: { en: 'Astatine', zh: '砹' }, atomicNumber: 85, atomicMass: 210.000, color: '#754F45', covalentRadius: 1.50, vanDerWaalsRadius: 2.00, valenceElectrons: 17, commonValences: [1] },
+  Rn: { symbol: 'Rn', name: { en: 'Radon', zh: '氡' }, atomicNumber: 86, atomicMass: 222.000, color: '#428296', covalentRadius: 1.50, vanDerWaalsRadius: 2.00, valenceElectrons: 18, commonValences: [0] },
+  Fr: { symbol: 'Fr', name: { en: 'Francium', zh: '钫' }, atomicNumber: 87, atomicMass: 223.000, color: '#420066', covalentRadius: 2.60, vanDerWaalsRadius: 2.00, valenceElectrons: 1, commonValences: [1] },
+  Ra: { symbol: 'Ra', name: { en: 'Radium', zh: '镭' }, atomicNumber: 88, atomicMass: 226.000, color: '#007D00', covalentRadius: 2.21, vanDerWaalsRadius: 2.00, valenceElectrons: 2, commonValences: [2] },
+  Ac: { symbol: 'Ac', name: { en: 'Actinium', zh: '锕' }, atomicNumber: 89, atomicMass: 227.000, color: '#70ABFA', covalentRadius: 2.15, vanDerWaalsRadius: 2.00, valenceElectrons: 3, commonValences: [3] },
+  Th: { symbol: 'Th', name: { en: 'Thorium', zh: '钍' }, atomicNumber: 90, atomicMass: 232.038, color: '#00BAFF', covalentRadius: 2.06, vanDerWaalsRadius: 2.00, valenceElectrons: 4, commonValences: [4] },
+  Pa: { symbol: 'Pa', name: { en: 'Protactinium', zh: '镤' }, atomicNumber: 91, atomicMass: 231.036, color: '#00A1FF', covalentRadius: 2.00, vanDerWaalsRadius: 2.00, valenceElectrons: 5, commonValences: [5] },
+  U: { symbol: 'U', name: { en: 'Uranium', zh: '铀' }, atomicNumber: 92, atomicMass: 238.029, color: '#008FFF', covalentRadius: 1.96, vanDerWaalsRadius: 2.00, valenceElectrons: 6, commonValences: [6] },
+  Np: { symbol: 'Np', name: { en: 'Neptunium', zh: '镎' }, atomicNumber: 93, atomicMass: 237.000, color: '#0080FF', covalentRadius: 1.90, vanDerWaalsRadius: 2.00, valenceElectrons: 7, commonValences: [5] },
+  Pu: { symbol: 'Pu', name: { en: 'Plutonium', zh: '钚' }, atomicNumber: 94, atomicMass: 244.000, color: '#006BFF', covalentRadius: 1.87, vanDerWaalsRadius: 2.00, valenceElectrons: 8, commonValences: [4] },
+  Am: { symbol: 'Am', name: { en: 'Americium', zh: '镅' }, atomicNumber: 95, atomicMass: 243.000, color: '#545CF2', covalentRadius: 1.80, vanDerWaalsRadius: 2.00, valenceElectrons: 9, commonValences: [3] },
+  Cm: { symbol: 'Cm', name: { en: 'Curium', zh: '锔' }, atomicNumber: 96, atomicMass: 247.000, color: '#785CE3', covalentRadius: 1.69, vanDerWaalsRadius: 2.00, valenceElectrons: 10, commonValences: [3] },
+  Bk: { symbol: 'Bk', name: { en: 'Berkelium', zh: '锫' }, atomicNumber: 97, atomicMass: 247.000, color: '#8A4FE3', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 11, commonValences: [3] },
+  Cf: { symbol: 'Cf', name: { en: 'Californium', zh: '锎' }, atomicNumber: 98, atomicMass: 251.000, color: '#A136D4', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 12, commonValences: [3] },
+  Es: { symbol: 'Es', name: { en: 'Einsteinium', zh: '锿' }, atomicNumber: 99, atomicMass: 252.000, color: '#B31FD4', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 13, commonValences: [3] },
+  Fm: { symbol: 'Fm', name: { en: 'Fermium', zh: '镄' }, atomicNumber: 100, atomicMass: 257.000, color: '#B31FBA', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 14, commonValences: [3] },
+  Md: { symbol: 'Md', name: { en: 'Mendelevium', zh: '钔' }, atomicNumber: 101, atomicMass: 258.000, color: '#B30DA6', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 15, commonValences: [3] },
+  No: { symbol: 'No', name: { en: 'Nobelium', zh: '锘' }, atomicNumber: 102, atomicMass: 259.000, color: '#BD0D87', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 16, commonValences: [3] },
+  Lr: { symbol: 'Lr', name: { en: 'Lawrencium', zh: '铹' }, atomicNumber: 103, atomicMass: 262.000, color: '#C70066', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 17, commonValences: [3] },
+  Rf: { symbol: 'Rf', name: { en: 'Rutherfordium', zh: '𬬻' }, atomicNumber: 104, atomicMass: 267.000, color: '#CC0059', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 4, commonValences: [4] },
+  Db: { symbol: 'Db', name: { en: 'Dubnium', zh: '𬭊' }, atomicNumber: 105, atomicMass: 268.000, color: '#D1004F', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 5, commonValences: [5] },
+  Sg: { symbol: 'Sg', name: { en: 'Seaborgium', zh: '𬭳' }, atomicNumber: 106, atomicMass: 271.000, color: '#D90045', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 6, commonValences: [6] },
+  Bh: { symbol: 'Bh', name: { en: 'Bohrium', zh: '𬭛' }, atomicNumber: 107, atomicMass: 272.000, color: '#E00038', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 7, commonValences: [7] },
+  Hs: { symbol: 'Hs', name: { en: 'Hassium', zh: '𬭶' }, atomicNumber: 108, atomicMass: 270.000, color: '#E6002E', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 8, commonValences: [8] },
+  Mt: { symbol: 'Mt', name: { en: 'Meitnerium', zh: '鿏' }, atomicNumber: 109, atomicMass: 276.000, color: '#EB0026', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 9, commonValences: [9] },
+  Ds: { symbol: 'Ds', name: { en: 'Darmstadtium', zh: '𫟼' }, atomicNumber: 110, atomicMass: 281.000, color: '#FF1493', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 10, commonValences: [10] },
+  Rg: { symbol: 'Rg', name: { en: 'Roentgenium', zh: '𬬭' }, atomicNumber: 111, atomicMass: 280.000, color: '#FF69B4', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 11, commonValences: [11] },
+  Cn: { symbol: 'Cn', name: { en: 'Copernicium', zh: '𫓧' }, atomicNumber: 112, atomicMass: 285.000, color: '#FFB6C1', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 12, commonValences: [12] },
+  Nh: { symbol: 'Nh', name: { en: 'Nihonium', zh: '𫓧' }, atomicNumber: 113, atomicMass: 284.000, color: '#FFC0CB', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 13, commonValences: [13] },
+  Fl: { symbol: 'Fl', name: { en: 'Flerovium', zh: '𫓧' }, atomicNumber: 114, atomicMass: 289.000, color: '#FFD1DC', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 14, commonValences: [14] },
+  Mc: { symbol: 'Mc', name: { en: 'Moscovium', zh: '镆' }, atomicNumber: 115, atomicMass: 288.000, color: '#FFDAB9', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 15, commonValences: [15] },
+  Lv: { symbol: 'Lv', name: { en: 'Livermorium', zh: '𫟷' }, atomicNumber: 116, atomicMass: 293.000, color: '#FFE4B5', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 16, commonValences: [16] },
+  Ts: { symbol: 'Ts', name: { en: 'Tennessine', zh: '𫠧' }, atomicNumber: 117, atomicMass: 294.000, color: '#FFE4E1', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 17, commonValences: [17] },
+  Og: { symbol: 'Og', name: { en: 'Oganesson', zh: '𫠧' }, atomicNumber: 118, atomicMass: 294.000, color: '#FFF0F5', covalentRadius: 1.60, vanDerWaalsRadius: 2.00, valenceElectrons: 18, commonValences: [18] },
 };
 
-// 分子数据库
-export const moleculeDatabase: Record<string, MoleculeData> = {
+// 分子数据库 / Molecule Database
+export const moleculeDatabase: Record<string, MoleculeDataRaw> = {
   'H2O': {
     formula: 'H2O',
-    name: 'Water',
-    iupacName: 'Oxidane',
+    name: { en: 'Water', zh: '水' },
+    iupacName: { en: 'Oxidane', zh: '氧化烷' },
     smiles: 'O',
-    description: 'Water is a polar inorganic compound that is at room temperature a tasteless and odorless liquid. It is the most abundant substance on Earth and essential for all known forms of life.',
+    description: { en: 'Water is a polar inorganic compound that is at room temperature a tasteless and odorless liquid. It is the most abundant substance on Earth and essential for all known forms of life.', zh: '水是一种极性无机化合物，在室温下为无味无色的液体。它是地球上最丰富的物质，对所有已知生命形式都必不可少。' },
     structure: {
       atoms: [
         { id: 'O1', element: 'O', x: 0, y: 0, z: 0, color: '#FF0D0D', radius: 0.66, mass: 15.999 },
@@ -189,9 +189,9 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
       hazards: ['None'],
     },
     applications: {
-      industrial: ['Steam generation', 'Coolant', 'Solvent', 'Chemical synthesis'],
-      research: ['Buffer preparation', 'Chromatography', 'Spectroscopy'],
-      everyday: ['Drinking', 'Cooking', 'Cleaning', 'Hydration'],
+      industrial: { en: ['Steam generation', 'Coolant', 'Solvent', 'Chemical synthesis'], zh: ['蒸汽发生', '冷却剂', '溶剂', '化学合成'] },
+      research: { en: ['Buffer preparation', 'Chromatography', 'Spectroscopy'], zh: ['缓冲液制备', '色谱法', '光谱学'] },
+      everyday: { en: ['Drinking', 'Cooking', 'Cleaning', 'Hydration'], zh: ['饮用', '烹饪', '清洁', '补水'] },
     },
     reactions: {
       asReactant: [
@@ -206,10 +206,10 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
   },
   'CO2': {
     formula: 'CO2',
-    name: 'Carbon Dioxide',
-    iupacName: 'Carbon Dioxide',
+    name: { en: 'Carbon Dioxide', zh: '二氧化碳' },
+    iupacName: { en: 'Carbon Dioxide', zh: '二氧化碳' },
     smiles: 'C(=O)=O',
-    description: 'Carbon dioxide is a colorless gas with a density about 53% higher than that of dry air. It is a greenhouse gas and plays a crucial role in photosynthesis.',
+    description: { en: 'Carbon dioxide is a colorless gas with a density about 53% higher than that of dry air. It is a greenhouse gas and plays a crucial role in photosynthesis.', zh: '二氧化碳是一种无色气体，密度比干燥空气高约53%。它是一种温室气体，在光合作用中起着关键作用。' },
     structure: {
       atoms: [
         { id: 'C1', element: 'C', x: 0, y: 0, z: 0, color: '#909090', radius: 0.76, mass: 12.011 },
@@ -271,9 +271,9 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
       hazards: ['Asphyxiant at high concentrations'],
     },
     applications: {
-      industrial: ['Refrigerant', 'Fire extinguisher', 'Carbonated beverages', 'Welding'],
-      research: ['Supercritical fluid extraction', 'pH control'],
-      everyday: ['Beverage carbonation', 'Plant growth enhancement'],
+      industrial: { en: ['Refrigerant', 'Fire extinguisher', 'Carbonated beverages', 'Welding'], zh: ['制冷剂', '灭火器', '碳酸饮料', '焊接'] },
+      research: { en: ['Supercritical fluid extraction', 'pH control'], zh: ['超临界流体萃取', 'pH控制'] },
+      everyday: { en: ['Beverage carbonation', 'Plant growth enhancement'], zh: ['饮料碳酸化', '植物生长促进'] },
     },
     reactions: {
       asReactant: [
@@ -288,10 +288,10 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
   },
   'CH4': {
     formula: 'CH4',
-    name: 'Methane',
-    iupacName: 'Methane',
+    name: { en: 'Methane', zh: '甲烷' },
+    iupacName: { en: 'Methane', zh: '甲烷' },
     smiles: 'C',
-    description: 'Methane is the simplest hydrocarbon and the main constituent of natural gas. It is a potent greenhouse gas and is used as a fuel.',
+    description: { en: 'Methane is the simplest hydrocarbon and the main constituent of natural gas. It is a potent greenhouse gas and is used as a fuel.', zh: '甲烷是最简单的碳氢化合物，也是天然气的主要成分。它是一种强效温室气体，也被用作燃料。' },
     structure: {
       atoms: [
         { id: 'C1', element: 'C', x: 0, y: 0, z: 0, color: '#909090', radius: 0.76, mass: 12.011 },
@@ -354,9 +354,9 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
       hazards: ['Highly flammable', 'Asphyxiant'],
     },
     applications: {
-      industrial: ['Fuel gas', 'Hydrogen production', 'Chemical synthesis'],
-      research: ['Fuel cell research', 'Atmospheric studies'],
-      everyday: ['Cooking fuel', 'Heating'],
+      industrial: { en: ['Fuel gas', 'Hydrogen production', 'Chemical synthesis'], zh: ['燃气', '氢气生产', '化学合成'] },
+      research: { en: ['Fuel cell research', 'Atmospheric studies'], zh: ['燃料电池研究', '大气研究'] },
+      everyday: { en: ['Cooking fuel', 'Heating'], zh: ['烹饪燃料', '取暖'] },
     },
     reactions: {
       asReactant: [
@@ -370,10 +370,10 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
   },
   'NH3': {
     formula: 'NH3',
-    name: 'Ammonia',
-    iupacName: 'Azane',
+    name: { en: 'Ammonia', zh: '氨' },
+    iupacName: { en: 'Azane', zh: '氮烷' },
     smiles: 'N',
-    description: 'Ammonia is a compound of nitrogen and hydrogen. It is a colorless gas with a characteristic pungent smell. It is a common nitrogenous waste and is used in fertilizers.',
+    description: { en: 'Ammonia is a compound of nitrogen and hydrogen. It is a colorless gas with a characteristic pungent smell. It is a common nitrogenous waste and is used in fertilizers.', zh: '氨是氮和氢的化合物。它是一种无色气体，具有特征性的刺激性气味。它是一种常见的含氮废物，被用于肥料中。' },
     structure: {
       atoms: [
         { id: 'N1', element: 'N', x: 0, y: 0, z: 0, color: '#3050F8', radius: 0.71, mass: 14.007 },
@@ -435,9 +435,9 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
       hazards: ['Toxic', 'Corrosive', 'Irritant'],
     },
     applications: {
-      industrial: ['Fertilizer production', 'Refrigeration', 'Chemical synthesis'],
-      research: ['pH control', 'Nitrogen source'],
-      everyday: ['Cleaning products', 'Refrigerant'],
+      industrial: { en: ['Fertilizer production', 'Refrigeration', 'Chemical synthesis'], zh: ['化肥生产', '制冷', '化学合成'] },
+      research: { en: ['pH control', 'Nitrogen source'], zh: ['pH控制', '氮源'] },
+      everyday: { en: ['Cleaning products', 'Refrigerant'], zh: ['清洁产品', '制冷剂'] },
     },
     reactions: {
       asReactant: [
@@ -451,10 +451,10 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
   },
   'C2H5OH': {
     formula: 'C2H5OH',
-    name: 'Ethanol',
-    iupacName: 'Ethanol',
+    name: { en: 'Ethanol', zh: '乙醇' },
+    iupacName: { en: 'Ethanol', zh: '乙醇' },
     smiles: 'CCO',
-    description: 'Ethanol is a volatile, flammable, colorless liquid with a slight characteristic odor. It is the principal type of alcohol found in alcoholic beverages.',
+    description: { en: 'Ethanol is a volatile, flammable, colorless liquid with a slight characteristic odor. It is the principal type of alcohol found in alcoholic beverages.', zh: '乙醇是一种挥发性、易燃、无色的液体，具有轻微的特征性气味。它是酒精饮料中发现的主要酒精类型。' },
     structure: {
       atoms: [
         { id: 'C1', element: 'C', x: -0.77, y: 0, z: 0, color: '#909090', radius: 0.76, mass: 12.011 },
@@ -527,9 +527,9 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
       hazards: ['Flammable', 'Central nervous system depressant'],
     },
     applications: {
-      industrial: ['Solvent', 'Fuel additive', 'Chemical synthesis'],
-      research: ['Disinfectant', 'Preservative'],
-      everyday: ['Alcoholic beverages', 'Hand sanitizer', 'Fuel'],
+      industrial: { en: ['Solvent', 'Fuel additive', 'Chemical synthesis'], zh: ['溶剂', '燃料添加剂', '化学合成'] },
+      research: { en: ['Disinfectant', 'Preservative'], zh: ['消毒剂', '防腐剂'] },
+      everyday: { en: ['Alcoholic beverages', 'Hand sanitizer', 'Fuel'], zh: ['酒精饮料', '洗手液', '燃料'] },
     },
     reactions: {
       asReactant: [
@@ -542,16 +542,16 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
       ],
     },
     isomers: [
-      { name: 'Ethanol', smiles: 'CCO', description: 'Primary alcohol' },
-      { name: 'Dimethyl Ether', smiles: 'COC', description: 'Ether isomer' },
+      { name: { en: 'Ethanol', zh: '乙醇' }, smiles: 'CCO', description: { en: 'Primary alcohol', zh: '伯醇' } },
+      { name: { en: 'Dimethyl Ether', zh: '二甲醚' }, smiles: 'COC', description: { en: 'Ether isomer', zh: '醚异构体' } },
     ],
   },
   'C6H12O6': {
     formula: 'C6H12O6',
-    name: 'Glucose',
-    iupacName: '(2R,3S,4R,5R)-2,3,4,5,6-Pentahydroxyhexanal',
+    name: { en: 'Glucose', zh: '葡萄糖' },
+    iupacName: { en: '(2R,3S,4R,5R)-2,3,4,5,6-Pentahydroxyhexanal', zh: '(2R,3S,4R,5R)-2,3,4,5,6-五羟基己醛' },
     smiles: 'C(C1C(C(C(C(O1)O)O)O)O)O',
-    description: 'Glucose is a simple sugar with the molecular formula C6H12O6. It is the most abundant monosaccharide and is the primary source of energy for living organisms.',
+    description: { en: 'Glucose is a simple sugar with the molecular formula C6H12O6. It is the most abundant monosaccharide and is the primary source of energy for living organisms.', zh: '葡萄糖是一种分子式为C6H12O6的单糖。它是最丰富的单糖，也是生物体的主要能量来源。' },
     structure: {
       atoms: [
         { id: 'C1', element: 'C', x: 0, y: 0, z: 0, color: '#909090', radius: 0.76, mass: 12.011 },
@@ -629,9 +629,9 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
       hazards: ['None significant'],
     },
     applications: {
-      industrial: ['Food industry', 'Pharmaceuticals', 'Fermentation'],
-      research: ['Cell culture', 'Metabolic studies'],
-      everyday: ['Energy source', 'Sweetener', 'Sports drinks'],
+      industrial: { en: ['Food industry', 'Pharmaceuticals', 'Fermentation'], zh: ['食品工业', '制药', '发酵'] },
+      research: { en: ['Cell culture', 'Metabolic studies'], zh: ['细胞培养', '代谢研究'] },
+      everyday: { en: ['Energy source', 'Sweetener', 'Sports drinks'], zh: ['能量来源', '甜味剂', '运动饮料'] },
     },
     reactions: {
       asReactant: [
@@ -643,17 +643,17 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
       ],
     },
     isomers: [
-      { name: 'α-D-Glucose', smiles: 'C([C@@H]1[C@H]([C@@H]([C@H]([C@H](O1)O)O)O)O)O', description: 'Alpha anomer' },
-      { name: 'β-D-Glucose', smiles: 'C([C@@H]1[C@H]([C@@H]([C@H]([C@@H](O1)O)O)O)O)O', description: 'Beta anomer' },
-      { name: 'Fructose', smiles: 'C(C(C(C(C(=O)CO)O)O)O)O', description: 'Ketohexose isomer' },
+      { name: { en: 'α-D-Glucose', zh: 'α-D-葡萄糖' }, smiles: 'C([C@@H]1[C@H]([C@@H]([C@H]([C@H](O1)O)O)O)O)O', description: { en: 'Alpha anomer', zh: 'α异构体' } },
+      { name: { en: 'β-D-Glucose', zh: 'β-D-葡萄糖' }, smiles: 'C([C@@H]1[C@H]([C@@H]([C@H]([C@@H](O1)O)O)O)O)O', description: { en: 'Beta anomer', zh: 'β异构体' } },
+      { name: { en: 'Fructose', zh: '果糖' }, smiles: 'C(C(C(C(C(=O)CO)O)O)O)O', description: { en: 'Ketohexose isomer', zh: '酮己糖异构体' } },
     ],
   },
   'NaCl': {
     formula: 'NaCl',
-    name: 'Sodium Chloride',
-    iupacName: 'Sodium Chloride',
+    name: { en: 'Sodium Chloride', zh: '氯化钠' },
+    iupacName: { en: 'Sodium Chloride', zh: '氯化钠' },
     smiles: '[Na+].[Cl-]',
-    description: 'Sodium chloride, commonly known as salt, is an ionic compound with the formula NaCl. It is essential for life and is the primary source of sodium and chloride ions in the diet.',
+    description: { en: 'Sodium chloride, commonly known as salt, is an ionic compound with the formula NaCl. It is essential for life and is the primary source of sodium and chloride ions in the diet.', zh: '氯化钠，俗称食盐，是一种分子式为NaCl的离子化合物。它对生命至关重要，是饮食中钠离子和氯离子的主要来源。' },
     structure: {
       atoms: [
         { id: 'Na1', element: 'Na', x: 0, y: 0, z: 0, color: '#AB5CF2', radius: 1.66, mass: 22.990 },
@@ -709,9 +709,9 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
       hazards: ['Excessive intake may cause hypertension'],
     },
     applications: {
-      industrial: ['Chemical production', 'Water treatment', 'De-icing'],
-      research: ['Buffer preparation', 'Cell culture'],
-      everyday: ['Food seasoning', 'Preservative', 'Cooking'],
+      industrial: { en: ['Chemical production', 'Water treatment', 'De-icing'], zh: ['化学生产', '水处理', '除冰'] },
+      research: { en: ['Buffer preparation', 'Cell culture'], zh: ['缓冲液制备', '细胞培养'] },
+      everyday: { en: ['Food seasoning', 'Preservative', 'Cooking'], zh: ['食品调味', '防腐剂', '烹饪'] },
     },
     reactions: {
       asReactant: [
@@ -725,29 +725,80 @@ export const moleculeDatabase: Record<string, MoleculeData> = {
   },
 };
 
-// 获取分子数据
-export function getMoleculeData(formula: string): MoleculeData | null {
+// Localize molecule data to a specific language
+export function localizeMoleculeData(raw: MoleculeDataRaw, lang: Language): MoleculeData {
+  return {
+    ...raw,
+    name: raw.name[lang],
+    iupacName: raw.iupacName[lang],
+    description: raw.description[lang],
+    applications: {
+      industrial: raw.applications.industrial[lang],
+      research: raw.applications.research[lang],
+      everyday: raw.applications.everyday[lang],
+    },
+    isomers: raw.isomers?.map(isomer => ({
+      ...isomer,
+      name: isomer.name[lang],
+      description: isomer.description[lang],
+    })),
+  };
+}
+
+// Localize element data to a specific language
+export function localizeElementData(raw: ElementDataRaw, lang: Language): ElementData {
+  return {
+    ...raw,
+    name: raw.name[lang],
+  };
+}
+
+// 获取分子数据 / Get Molecule Data
+export function getMoleculeData(formula: string, lang: Language): MoleculeData | null {
   const normalizedFormula = formula.replace(/\s/g, '').toUpperCase();
-  return moleculeDatabase[normalizedFormula] || null;
+  const raw = moleculeDatabase[normalizedFormula];
+  if (!raw) return null;
+  return localizeMoleculeData(raw, lang);
 }
 
-// 搜索分子
-export function searchMolecules(query: string): MoleculeData[] {
+// 搜索分子 / Search Molecules
+export function searchMolecules(query: string, lang: Language): MoleculeData[] {
   const normalizedQuery = query.toLowerCase();
-  return Object.values(moleculeDatabase).filter(
-    (molecule) =>
-      molecule.formula.toLowerCase().includes(normalizedQuery) ||
-      molecule.name.toLowerCase().includes(normalizedQuery) ||
-      molecule.iupacName.toLowerCase().includes(normalizedQuery)
-  );
+  return Object.values(moleculeDatabase)
+    .filter((molecule) => {
+      const name = molecule.name[lang].toLowerCase();
+      const iupacName = molecule.iupacName[lang].toLowerCase();
+      const description = molecule.description[lang].toLowerCase();
+      return (
+        molecule.formula.toLowerCase().includes(normalizedQuery) ||
+        name.includes(normalizedQuery) ||
+        iupacName.includes(normalizedQuery) ||
+        description.includes(normalizedQuery)
+      );
+    })
+    .map((molecule) => localizeMoleculeData(molecule, lang));
 }
 
-// 获取所有分子列表
-export function getAllMolecules(): MoleculeData[] {
-  return Object.values(moleculeDatabase);
+// 获取所有分子列表 / Get All Molecules
+export function getAllMolecules(lang: Language): MoleculeData[] {
+  return Object.values(moleculeDatabase).map((molecule) => localizeMoleculeData(molecule, lang));
 }
 
-// 获取元素数据
-export function getElementData(symbol: string): ElementData | null {
-  return elementDatabase[symbol as ElementSymbol] || null;
+// 获取元素数据 / Get Element Data
+export function getElementData(symbol: string, lang: Language): ElementData | null {
+  const raw = elementDatabase[symbol as ElementSymbol];
+  if (!raw) return null;
+  return localizeElementData(raw, lang);
 }
+
+// Export reactive hooks for components
+export { 
+  useMoleculeData, 
+  useElementData, 
+  useAllMolecules, 
+  useSearchMolecules,
+  useOnLanguageChange,
+  subscribeToLanguageChange,
+  notifyLanguageChange,
+  getCurrentLanguage
+} from './moleculeDatabaseHooks';

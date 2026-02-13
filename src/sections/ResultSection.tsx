@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLanguage } from '@/i18n';
 import type { MoleculeData, ViewerSettings  } from '@/types/molecule';
 import { Molecule3DViewer } from '@/components/molecule/Molecule3DViewer';
 import { LewisStructure } from '@/components/molecule/LewisStructure';
@@ -25,6 +26,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
   isLoading,
   error,
 }) => {
+  const { t, language } = useLanguage();
   const [viewMode, setViewMode] = useState<ViewMode>('3d');
   const [selectedIsomer, setSelectedIsomer] = useState<string>('');
   const [viewerSettings, setViewerSettings] = useState<ViewerSettings>({
@@ -36,13 +38,12 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
     bondScale: 1,
   });
   
-  // 处理同分异构体选择
+  // Handle isomer selection
   const handleIsomerSelect = (smiles: string) => {
     setSelectedIsomer(smiles);
-    // 这里可以加载对应的异构体数据
   };
   
-  // 切换3D显示模式
+  // Toggle 3D viewer mode
   const toggleViewerMode = () => {
     setViewerSettings((prev) => ({
       ...prev,
@@ -50,7 +51,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
     }));
   };
   
-  // 切换标签显示
+  // Toggle labels
   const toggleLabels = () => {
     setViewerSettings((prev) => ({
       ...prev,
@@ -68,8 +69,8 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
             <div className="absolute inset-4 border-4 border-purple-500/20 rounded-full" />
             <div className="absolute inset-4 border-4 border-purple-500 border-b-transparent rounded-full animate-spin reverse" />
           </div>
-          <h2 className="text-2xl font-semibold text-white mb-2">正在分析分子结构...</h2>
-          <p className="text-slate-400">请稍候，我们正在生成3D模型和理化性质数据</p>
+          <h2 className="text-2xl font-semibold text-white mb-2">{t.analyzing}</h2>
+          <p className="text-slate-400">{language === 'zh' ? '请稍候，我们正在生成3D模型和理化性质数据' : 'Please wait while we generate the 3D model and property data'}</p>
         </div>
       </section>
     );
@@ -82,10 +83,10 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
           <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center">
             <AlertCircle className="w-10 h-10 text-red-400" />
           </div>
-          <h2 className="text-2xl font-semibold text-white mb-2">分析失败</h2>
+          <h2 className="text-2xl font-semibold text-white mb-2">{t.analysisError}</h2>
           <p className="text-slate-400 mb-6">{error}</p>
           <p className="text-sm text-slate-500">
-            请尝试输入其他分子式，如 H2O、CO2、CH4、NH3、C2H5OH 等
+            {language === 'zh' ? '请尝试输入其他分子式，如 H2O、CO2、CH4、NH3、C2H5OH 等' : 'Try other formulas like H2O, CO2, CH4, NH3, C2H5OH, etc.'}
           </p>
         </div>
       </section>
@@ -99,11 +100,11 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
   return (
     <section className="min-h-screen py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* 结果标题 */}
+        {/* 结果标题 / Result Title */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/20 rounded-full text-indigo-300 text-sm mb-4">
             <Info className="w-4 h-4" />
-            <span>分析完成</span>
+            <span>{language === 'zh' ? '分析完成' : 'Analysis Complete'}</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
             {molecule.name}
@@ -111,7 +112,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
           <p className="text-xl text-indigo-400 font-mono">{molecule.formula}</p>
         </div>
         
-        {/* 同分异构体选择器 */}
+        {/* 同分异构体选择器 / Isomer Selector */}
         {molecule.isomers && molecule.isomers.length > 1 && (
           <div className="mb-8">
             <IsomerSelector
@@ -122,11 +123,11 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
           </div>
         )}
         
-        {/* 主内容区 */}
+        {/* 主内容区 / Main Content */}
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* 左侧：分子可视化 */}
+          {/* 左侧：分子可视化 / Left: Molecular Visualization */}
           <div className="space-y-4">
-            {/* 视图切换 */}
+            {/* 视图切换 / View Toggle */}
             <div className="flex items-center justify-between">
               <div className="flex gap-2">
                 <button
@@ -138,7 +139,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
                   }`}
                 >
                   <Box className="w-4 h-4" />
-                  <span>3D模型</span>
+                  <span>{t.molecularStructure}</span>
                 </button>
                 <button
                   onClick={() => setViewMode('lewis')}
@@ -149,7 +150,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
                   }`}
                 >
                   <Layers className="w-4 h-4" />
-                  <span>路易斯结构式</span>
+                  <span>{t.featureLewisTitle}</span>
                 </button>
               </div>
               
@@ -158,7 +159,10 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
                   <button
                     onClick={toggleViewerMode}
                     className="p-2 bg-slate-800 text-slate-400 hover:text-white rounded-lg transition-colors"
-                    title={viewerSettings.mode === 'ball-stick' ? '切换到比例模型' : '切换到球棍模型'}
+                    title={viewerSettings.mode === 'ball-stick' 
+                      ? (language === 'zh' ? '切换到比例模型' : 'Switch to space-fill model')
+                      : (language === 'zh' ? '切换到球棍模型' : 'Switch to ball-stick model')
+                    }
                   >
                     <Maximize2 className="w-4 h-4" />
                   </button>
@@ -169,7 +173,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
                         ? 'bg-indigo-500 text-white'
                         : 'bg-slate-800 text-slate-400 hover:text-white'
                     }`}
-                    title="显示/隐藏标签"
+                    title={language === 'zh' ? '显示/隐藏标签' : 'Show/Hide labels'}
                   >
                     <Info className="w-4 h-4" />
                   </button>
@@ -177,7 +181,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
               )}
             </div>
             
-            {/* 可视化区域 */}
+            {/* 可视化区域 / Visualization Area */}
             <div className="glass-card p-4 aspect-square flex items-center justify-center">
               {viewMode === '3d' ? (
                 <Molecule3DViewer
@@ -200,30 +204,37 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
               )}
             </div>
             
-            {/* 视图说明 */}
+            {/* 视图说明 / View Instructions */}
             <div className="glass-card p-4">
               <h4 className="text-sm font-medium text-slate-300 mb-2">
-                {viewMode === '3d' ? '3D模型控制' : '路易斯结构式说明'}
+                {viewMode === '3d' 
+                  ? (language === 'zh' ? '3D模型控制' : '3D Model Controls')
+                  : (language === 'zh' ? '路易斯结构式说明' : 'Lewis Structure Guide')
+                }
               </h4>
               <p className="text-xs text-slate-400">
                 {viewMode === '3d' ? (
                   <>
-                    • 拖动鼠标旋转分子<br />
-                    • 滚轮缩放视图<br />
-                    • 当前模式：{viewerSettings.mode === 'ball-stick' ? '球棍模型' : '比例模型'}
+                    • {language === 'zh' ? '拖动鼠标旋转分子' : 'Drag to rotate'}<br />
+                    • {language === 'zh' ? '滚轮缩放视图' : 'Scroll to zoom'}<br />
+                    • {language === 'zh' ? '当前模式：' : 'Current mode: '}
+                    {viewerSettings.mode === 'ball-stick' 
+                      ? (language === 'zh' ? '球棍模型' : 'Ball-stick model')
+                      : (language === 'zh' ? '比例模型' : 'Space-fill model')
+                    }
                   </>
                 ) : (
                   <>
-                    • 紫色圆点表示孤对电子<br />
-                    • 线条表示共价键（双线=双键，三线=三键）<br />
-                    • 原子颜色遵循CPK配色方案
+                    • {language === 'zh' ? '紫色圆点表示孤对电子' : 'Purple dots indicate lone pairs'}<br />
+                    • {language === 'zh' ? '线条表示共价键（双线=双键，三线=三键）' : 'Lines indicate bonds (double=triple)'}<br />
+                    • {language === 'zh' ? '原子颜色遵循CPK配色方案' : 'Atom colors follow CPK convention'}
                   </>
                 )}
               </p>
             </div>
           </div>
           
-          {/* 右侧：属性面板 */}
+          {/* 右侧：属性面板 / Right: Property Panel */}
           <div className="lg:h-[calc(100vh-8rem)] lg:overflow-y-auto custom-scrollbar">
             <PropertyPanel molecule={molecule} />
           </div>

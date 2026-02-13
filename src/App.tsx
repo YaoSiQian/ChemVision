@@ -1,56 +1,71 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { HeroSection } from '@/sections/HeroSection';
 import { ResultSection } from '@/sections/ResultSection';
 import { FeaturesSection } from '@/sections/FeaturesSection';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { LanguageProvider, useLanguage } from '@/i18n';
 import type { MoleculeData  } from '@/types/molecule';
 import { getMoleculeData } from '@/data/moleculeDatabase';
 import { parseMolecularFormula } from '@/utils/moleculeParser';
 import { Toaster, toast } from 'sonner';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
-function App() {
+function AppContent() {
   const [molecule, setMolecule] = useState<MoleculeData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [currentFormula, setCurrentFormula] = useState<string>('');
   const resultRef = useRef<HTMLDivElement>(null);
+  const { t, language } = useLanguage();
 
-  // 处理搜索
+  // Hot update: Refresh molecule data when language changes
+  useEffect(() => {
+    if (currentFormula && molecule && !isLoading) {
+      const updatedData = getMoleculeData(currentFormula, language);
+      if (updatedData) {
+        setMolecule(updatedData);
+      }
+    }
+  }, [language, currentFormula]);
+
+  // Handle search
   const handleSearch = async (formula: string) => {
     setIsLoading(true);
     setError(null);
     setHasSearched(true);
 
     try {
-      // 验证分子式格式
+      // Validate molecular formula
       const parsed = parseMolecularFormula(formula);
       if (!parsed.isValid) {
-        throw new Error(parsed.error || 'Invalid formula');
+        throw new Error(parsed.error || t.invalidFormula);
       }
 
-      // 模拟API调用延迟
+      // Simulate API delay
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // 获取分子数据
-      const data = getMoleculeData(formula);
+      // Get molecule data
+      const data = getMoleculeData(formula, language);
       
       if (data) {
         setMolecule(data);
-        toast.success(`成功分析 ${formula}`, {
-          description: `已加载 ${data.name} 的完整数据`,
+        setCurrentFormula(formula);
+        toast.success(`${t.analysisSuccess} ${formula}`, {
+          description: `${t.dataLoaded} ${data.name}`,
           icon: <CheckCircle2 className="w-4 h-4 text-green-500" />,
         });
         
-        // 滚动到结果区域
+        // Scroll to results
         setTimeout(() => {
           resultRef.current?.scrollIntoView({ behavior: 'smooth' });
         }, 100);
       } else {
-        // 如果数据库中没有，生成基本数据
+        // Generate basic data if not in database
         const basicData = generateBasicMoleculeData(formula, parsed.elements);
         setMolecule(basicData);
-        toast.info(`已生成 ${formula} 的基础数据`, {
-          description: '部分属性基于理论计算',
+        toast.info(`${t.basicDataGenerated} ${formula}`, {
+          description: language === 'zh' ? '部分属性基于理论计算' : 'Some properties are based on theoretical calculations',
           icon: <AlertCircle className="w-4 h-4 text-blue-500" />,
         });
         
@@ -59,16 +74,16 @@ function App() {
         }, 100);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      toast.error('分析失败', {
-        description: err instanceof Error ? err.message : '请检查分子式格式',
+      setError(err instanceof Error ? err.message : t.unknownError);
+      toast.error(t.analysisError, {
+        description: err instanceof Error ? err.message : t.invalidFormula,
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 生成基础分子数据（用于数据库中不存在的分子）
+  // Generate basic molecule data for unknown molecules
   const generateBasicMoleculeData = (formula: string, elements: { element: string; count: number }[]): MoleculeData => {
     const molecularWeight = elements.reduce((sum, e) => {
       const atomicMass = {
@@ -93,10 +108,12 @@ function App() {
 
     return {
       formula,
-      name: `${formula} Molecule`,
+      name: language === 'zh' ? `${formula} 分子` : `${formula} Molecule`,
       iupacName: formula,
       smiles: formula,
-      description: `A chemical compound with formula ${formula}.`,
+      description: language === 'zh' 
+        ? `分子式为 ${formula} 的化合物。`
+        : `A chemical compound with formula ${formula}.`,
       structure: {
         atoms: elements.map((e, i) => ({
           id: `${e.element}${i}`,
@@ -169,7 +186,12 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-900">
-      {/* Toast通知 */}
+      {/* Language Switcher */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSwitcher />
+      </div>
+
+      {/* Toast notifications */}
       <Toaster 
         position="top-right" 
         theme="dark"
@@ -182,10 +204,10 @@ function App() {
         }}
       />
       
-      {/* 主视觉区 */}
+      {/* Hero Section */}
       <HeroSection onSearch={handleSearch} isLoading={isLoading} />
       
-      {/* 结果区域 */}
+      {/* Result Section */}
       <div ref={resultRef}>
         <ResultSection 
           molecule={molecule} 
@@ -194,9 +216,17 @@ function App() {
         />
       </div>
       
-      {/* 特性介绍（仅在未搜索时显示） */}
+      {/* Features Section (only shown when no search performed) */}
       {!hasSearched && <FeaturesSection />}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 }
 

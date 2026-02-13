@@ -1,6 +1,6 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
-import type { Atom, Bond, ViewerSettings  } from '@/types/molecule';
-import { getElementData } from '@/data/moleculeDatabase';
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import type { Atom, Bond, ViewerSettings, ElementData, ElementSymbol } from '@/types/molecule';
+import { useElementData } from '@/data/moleculeDatabaseHooks';
 
 interface Molecule3DViewerProps {
   atoms: Atom[];
@@ -26,6 +26,21 @@ const defaultSettings: ViewerSettings = {
   bondScale: 1,
 };
 
+// Individual hook for each element - creates a component
+function ElementDataFetcher({ 
+  element, 
+  onData 
+}: { 
+  element: ElementSymbol; 
+  onData: (element: string, data: ElementData | null) => void;
+}) {
+  const data = useElementData(element);
+  useEffect(() => {
+    onData(element, data);
+  }, [element, data, onData]);
+  return null;
+}
+
 export const Molecule3DViewer: React.FC<Molecule3DViewerProps> = ({
   atoms,
   bonds,
@@ -42,6 +57,20 @@ export const Molecule3DViewer: React.FC<Molecule3DViewerProps> = ({
   const [zoom, setZoom] = useState(1);
   const animationRef = useRef<number | null>(null);
   const mergedSettings = { ...defaultSettings, ...settings };
+  
+  // Store element data in a ref for the animation loop
+  const elementDataRef = useRef<Record<string, ElementData | null>>({});
+
+  // Get unique element symbols from atoms
+  const uniqueElements = useMemo(() => 
+    Array.from(new Set(atoms.map(a => a.element as ElementSymbol))),
+    [atoms]
+  );
+
+  // Callback to update element data
+  const handleElementData = useCallback((element: string, data: ElementData | null) => {
+    elementDataRef.current[element] = data;
+  }, []);
 
   // 3D投影函数
   const project3D = useCallback((point: Point3D, rotation: Point3D, center: Point3D): Point3D => {
@@ -55,6 +84,25 @@ export const Molecule3DViewer: React.FC<Molecule3DViewerProps> = ({
     
     return { x: x + center.x, y: y + center.y, z };
   }, []);
+
+  // 颜色辅助函数
+  const lightenColor = (color: string, percent: number): string => {
+    const num = parseInt(color.replace('#', ''), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = Math.min(255, (num >> 16) + amt);
+    const G = Math.min(255, ((num >> 8) & 0x00ff) + amt);
+    const B = Math.min(255, (num & 0x0000ff) + amt);
+    return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
+  };
+
+  const darkenColor = (color: string, percent: number): string => {
+    const num = parseInt(color.replace('#', ''), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = Math.max(0, (num >> 16) - amt);
+    const G = Math.max(0, ((num >> 8) & 0x00ff) - amt);
+    const B = Math.max(0, (num & 0x0000ff) - amt);
+    return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
+  };
 
   // 绘制分子
   const drawMolecule = useCallback(() => {
@@ -115,9 +163,9 @@ export const Molecule3DViewer: React.FC<Molecule3DViewerProps> = ({
       });
     }
     
-    // 绘制原子
+    // 绘制原子 - Now uses reactive element data from elementDataRef
     sortedAtoms.forEach((atom) => {
-      const elementData = getElementData(atom.element);
+      const elementData = elementDataRef.current[atom.element];
       const radius = mergedSettings.mode === 'space-fill'
         ? (elementData?.vanDerWaalsRadius || atom.radius) * 50 * mergedSettings.atomScale
         : (elementData?.covalentRadius || atom.radius) * 80 * mergedSettings.atomScale;
@@ -163,25 +211,6 @@ export const Molecule3DViewer: React.FC<Molecule3DViewerProps> = ({
       }
     });
   }, [atoms, bonds, rotation, zoom, width, height, mergedSettings, project3D]);
-
-  // 颜色辅助函数
-  const lightenColor = (color: string, percent: number): string => {
-    const num = parseInt(color.replace('#', ''), 16);
-    const amt = Math.round(2.55 * percent);
-    const R = Math.min(255, (num >> 16) + amt);
-    const G = Math.min(255, ((num >> 8) & 0x00ff) + amt);
-    const B = Math.min(255, (num & 0x0000ff) + amt);
-    return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
-  };
-
-  const darkenColor = (color: string, percent: number): string => {
-    const num = parseInt(color.replace('#', ''), 16);
-    const amt = Math.round(2.55 * percent);
-    const R = Math.max(0, (num >> 16) - amt);
-    const G = Math.max(0, ((num >> 8) & 0x00ff) - amt);
-    const B = Math.max(0, (num & 0x0000ff) - amt);
-    return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
-  };
 
   // 动画循环
   useEffect(() => {
@@ -247,6 +276,17 @@ export const Molecule3DViewer: React.FC<Molecule3DViewerProps> = ({
       className={`relative ${className}`}
       style={{ width, height }}
     >
+      {/* Hidden components to fetch element data reactively */}
+      <div style={{ display: 'none' }}>
+        {uniqueElements.map((element) => (
+          <ElementDataFetcher
+            key={element}
+            element={element}
+            onData={handleElementData}
+          />
+        ))}
+      </div>
+      
       <canvas
         ref={canvasRef}
         width={width}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLanguage } from '@/i18n';
 import type { MoleculeData  } from '@/types/molecule';
 import { 
   ChevronDown, 
@@ -82,9 +83,64 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
   molecule,
   className = '',
 }) => {
+  const { t, language } = useLanguage();
+
+  // Helper to get translated value
+  const getStateLabel = (state: string) => {
+    const stateMap: Record<string, string> = {
+      'Solid': t.solid,
+      'Liquid': t.liquid,
+      'Gas': t.gas,
+      'Unknown': t.unknown,
+    };
+    return stateMap[state] || state;
+  };
+
+  const getPolarityLabel = (polarity: string) => {
+    const polarityMap: Record<string, string> = {
+      'Polar': t.polar,
+      'Nonpolar': t.nonpolar,
+      'Ionic': t.ionic,
+      'Unknown': t.unknown,
+    };
+    return polarityMap[polarity] || polarity;
+  };
+
+  const getToxicityLabel = (level: string) => {
+    const toxicityMap: Record<string, string> = {
+      'Low': t.low,
+      'Moderate': t.moderate,
+      'High': t.high,
+      'Very High': t.veryHigh,
+    };
+    return toxicityMap[level] || level;
+  };
+
+  const getFlammabilityLabel = (level: string) => {
+    const flammabilityMap: Record<string, string> = {
+      'None': t.none,
+      'Low': t.low,
+      'Moderate': t.moderate,
+      'High': t.high,
+      'Flammable': t.flammable,
+      'Highly Flammable': t.highlyFlammable,
+    };
+    return flammabilityMap[level] || level;
+  };
+
+  const getReactivityLabel = (level: string) => {
+    const reactivityMap: Record<string, string> = {
+      'Stable': t.stable,
+      'Unstable': t.unstable,
+      'Reactive': t.reactive,
+      'Highly Reactive': t.highlyReactive,
+    };
+    return reactivityMap[level] || level;
+  };
+
   return (
     <div className={`space-y-4 ${className}`}>
-      {/* 基本信息 */}
+      {/* 基本信息 / Basic Information */}
       <div className="glass-card p-4">
         <h2 className="text-xl font-semibold text-white mb-1">{molecule.name}</h2>
         <p className="text-indigo-400 text-sm font-mono mb-2">{molecule.formula}</p>
@@ -92,72 +148,72 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         <p className="text-slate-300 text-sm mt-3 leading-relaxed">{molecule.description}</p>
       </div>
       
-      {/* 电子结构 */}
-      <CollapsibleSection title="电子结构" icon={<Atom className="w-5 h-5" />} defaultOpen>
+      {/* 电子结构 / Electronic Structure */}
+      <CollapsibleSection title={t.electronicProperties} icon={<Atom className="w-5 h-5" />} defaultOpen>
         <div className="space-y-1">
-          <DataRow label="总电子数" value={molecule.electronic.totalElectrons} />
-          <DataRow label="成键电子数" value={molecule.electronic.bondingElectrons} />
-          <DataRow label="孤对电子数" value={molecule.electronic.lonePairElectrons} />
-          <DataRow label="σ键数量" value={molecule.electronic.sigmaBonds} />
-          <DataRow label="π键数量" value={molecule.electronic.piBonds} />
-          <DataRow label="杂化轨道" value={molecule.electronic.hybridization} />
-          <DataRow label="VSEPR类型" value={molecule.electronic.vseprType} />
-          <DataRow label="分子几何构型" value={molecule.electronic.geometry} />
+          <DataRow label={t.totalElectrons} value={molecule.electronic.totalElectrons} />
+          <DataRow label={t.bondingElectrons} value={molecule.electronic.bondingElectrons} />
+          <DataRow label={t.lonePairElectrons} value={molecule.electronic.lonePairElectrons} />
+          <DataRow label={t.sigmaBonds} value={molecule.electronic.sigmaBonds} />
+          <DataRow label={t.piBonds} value={molecule.electronic.piBonds} />
+          <DataRow label={t.hybridization} value={molecule.electronic.hybridization} />
+          <DataRow label={t.vseprType} value={molecule.electronic.vseprType} />
+          <DataRow label={t.geometry} value={molecule.electronic.geometry} />
           {Object.entries(molecule.electronic.bondAngles).map(([angle, value]) => (
-            <DataRow key={angle} label={`${angle}键角`} value={value} unit="°" />
+            <DataRow key={angle} label={`${angle} ${t.bondAngles}`} value={value} unit="°" />
           ))}
         </div>
       </CollapsibleSection>
       
-      {/* 物理性质 */}
-      <CollapsibleSection title="物理性质" icon={<Thermometer className="w-5 h-5" />}>
+      {/* 物理性质 / Physical Properties */}
+      <CollapsibleSection title={t.physicalProperties} icon={<Thermometer className="w-5 h-5" />}>
         <div className="space-y-1">
-          <DataRow label="分子量" value={molecule.physical.molecularWeight} unit="g/mol" />
-          <DataRow label="极性" value={molecule.physical.polarity} />
-          <DataRow label="熔点" value={molecule.physical.meltingPoint} unit="°C" />
-          <DataRow label="沸点" value={molecule.physical.boilingPoint} unit="°C" />
-          <DataRow label="密度" value={molecule.physical.density} unit="g/cm³" />
-          <DataRow label="溶解性" value={molecule.physical.solubility} />
-          <DataRow label="常温状态" value={molecule.physical.stateAtRoomTemp} />
+          <DataRow label={t.molecularWeight} value={molecule.physical.molecularWeight} unit="g/mol" />
+          <DataRow label={t.polarity} value={getPolarityLabel(molecule.physical.polarity)} />
+          <DataRow label={t.meltingPoint} value={molecule.physical.meltingPoint} unit="°C" />
+          <DataRow label={t.boilingPoint} value={molecule.physical.boilingPoint} unit="°C" />
+          <DataRow label={t.density} value={molecule.physical.density} unit="g/cm³" />
+          <DataRow label={t.solubility} value={molecule.physical.solubility} />
+          <DataRow label={t.stateAtRoomTemp} value={getStateLabel(molecule.physical.stateAtRoomTemp)} />
         </div>
       </CollapsibleSection>
       
-      {/* 热力学数据 */}
-      <CollapsibleSection title="热力学数据" icon={<Zap className="w-5 h-5" />}>
+      {/* 热力学数据 / Thermodynamic Data */}
+      <CollapsibleSection title={t.thermodynamicData} icon={<Zap className="w-5 h-5" />}>
         <div className="space-y-1">
           <DataRow 
-            label="标准摩尔生成焓" 
+            label={t.standardEnthalpyFormation} 
             value={molecule.thermodynamic.standardEnthalpyFormation} 
             unit="kJ/mol" 
           />
           <DataRow 
-            label="标准摩尔燃烧焓" 
+            label={t.standardEnthalpyCombustion} 
             value={molecule.thermodynamic.standardEnthalpyCombustion} 
             unit="kJ/mol" 
           />
           <DataRow 
-            label="熵" 
+            label={t.entropy} 
             value={molecule.thermodynamic.entropy} 
             unit="J/(mol·K)" 
           />
           <DataRow 
-            label="吉布斯自由能" 
+            label={t.gibbsFreeEnergy} 
             value={molecule.thermodynamic.gibbsFreeEnergy} 
             unit="kJ/mol" 
           />
           <DataRow 
-            label="热容" 
+            label={t.heatCapacity} 
             value={molecule.thermodynamic.heatCapacity} 
             unit="J/(mol·K)" 
           />
         </div>
       </CollapsibleSection>
       
-      {/* 光谱数据 */}
-      <CollapsibleSection title="光谱数据" icon={<Radio className="w-5 h-5" />}>
+      {/* 光谱数据 / Spectral Data */}
+      <CollapsibleSection title={t.spectralData} icon={<Radio className="w-5 h-5" />}>
         <div className="space-y-3">
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">红外光谱 (IR)</h4>
+            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.irSpectrum}</h4>
             <div className="space-y-1">
               {molecule.spectral.irPeaks.map((peak, index) => (
                 <div key={index} className="flex justify-between items-center py-1 text-sm">
@@ -178,7 +234,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </div>
           
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">质谱 (MS)</h4>
+            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.massSpectrum}</h4>
             <div className="space-y-1">
               {molecule.spectral.msPeaks.map((peak, index) => (
                 <div key={index} className="flex justify-between items-center py-1 text-sm">
@@ -197,41 +253,41 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         </div>
       </CollapsibleSection>
       
-      {/* 安全性数据 */}
-      <CollapsibleSection title="安全性数据" icon={<Shield className="w-5 h-5" />}>
+      {/* 安全性数据 / Safety Information */}
+      <CollapsibleSection title={t.safetyInfo} icon={<Shield className="w-5 h-5" />}>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-2">
             <div className="p-2 rounded-lg bg-slate-800/50">
-              <span className="text-xs text-slate-400 block mb-1">毒性等级</span>
+              <span className="text-xs text-slate-400 block mb-1">{t.toxicityLevel}</span>
               <span className={`text-sm font-medium ${
                 molecule.safety.toxicityLevel === 'Low' ? 'text-green-400' :
                 molecule.safety.toxicityLevel === 'Moderate' ? 'text-yellow-400' :
                 molecule.safety.toxicityLevel === 'High' ? 'text-orange-400' : 'text-red-400'
               }`}>
-                {molecule.safety.toxicityLevel}
+                {getToxicityLabel(molecule.safety.toxicityLevel)}
               </span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50">
-              <span className="text-xs text-slate-400 block mb-1">可燃性</span>
+              <span className="text-xs text-slate-400 block mb-1">{t.flammability}</span>
               <span className={`text-sm font-medium ${
                 molecule.safety.flammability === 'None' ? 'text-green-400' :
                 molecule.safety.flammability === 'Low' ? 'text-yellow-400' :
                 molecule.safety.flammability === 'Moderate' ? 'text-orange-400' : 'text-red-400'
               }`}>
-                {molecule.safety.flammability}
+                {getFlammabilityLabel(molecule.safety.flammability)}
               </span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50">
-              <span className="text-xs text-slate-400 block mb-1">反应性</span>
+              <span className="text-xs text-slate-400 block mb-1">{t.reactivity}</span>
               <span className={`text-sm font-medium ${
                 molecule.safety.reactivity === 'Stable' ? 'text-green-400' :
                 molecule.safety.reactivity === 'Unstable' ? 'text-yellow-400' : 'text-red-400'
               }`}>
-                {molecule.safety.reactivity}
+                {getReactivityLabel(molecule.safety.reactivity)}
               </span>
             </div>
             <div className="p-2 rounded-lg bg-slate-800/50">
-              <span className="text-xs text-slate-400 block mb-1">生物降解性</span>
+              <span className="text-xs text-slate-400 block mb-1">{t.biodegradability}</span>
               <span className="text-sm font-medium text-slate-300">
                 {molecule.safety.biodegradability}
               </span>
@@ -240,7 +296,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           
           {molecule.safety.hazards.length > 0 && molecule.safety.hazards[0] !== 'None' && (
             <div>
-              <h4 className="text-sm font-medium text-slate-300 mb-2">危险特性</h4>
+              <h4 className="text-sm font-medium text-slate-300 mb-2">{t.hazards}</h4>
               <div className="flex flex-wrap gap-2">
                 {molecule.safety.hazards.map((hazard, index) => (
                   <span 
@@ -256,11 +312,11 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         </div>
       </CollapsibleSection>
       
-      {/* 应用场景 */}
-      <CollapsibleSection title="应用场景" icon={<Beaker className="w-5 h-5" />}>
+      {/* 应用场景 / Applications */}
+      <CollapsibleSection title={t.applications} icon={<Beaker className="w-5 h-5" />}>
         <div className="space-y-3">
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">工业应用</h4>
+            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.industrial}</h4>
             <div className="flex flex-wrap gap-2">
               {molecule.applications.industrial.map((app, index) => (
                 <span 
@@ -274,7 +330,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </div>
           
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">科研应用</h4>
+            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.research}</h4>
             <div className="flex flex-wrap gap-2">
               {molecule.applications.research.map((app, index) => (
                 <span 
@@ -288,7 +344,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </div>
           
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">日常生活</h4>
+            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.everyday}</h4>
             <div className="flex flex-wrap gap-2">
               {molecule.applications.everyday.map((app, index) => (
                 <span 
@@ -303,28 +359,32 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         </div>
       </CollapsibleSection>
       
-      {/* 化学反应 */}
-      <CollapsibleSection title="化学反应" icon={<FlaskConical className="w-5 h-5" />}>
+      {/* 化学反应 / Chemical Reactions */}
+      <CollapsibleSection title={t.reactions} icon={<FlaskConical className="w-5 h-5" />}>
         <div className="space-y-3">
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">作为反应物</h4>
+            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.asReactant}</h4>
             <div className="space-y-2">
               {molecule.reactions.asReactant.map((reaction, index) => (
                 <div key={index} className="p-2 rounded-lg bg-slate-800/50">
                   <p className="text-sm text-slate-300 font-mono">{reaction.equation}</p>
-                  <p className="text-xs text-slate-500 mt-1">条件: {reaction.conditions}</p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {language === 'zh' ? '条件' : 'Conditions'}: {reaction.conditions}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
           
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">作为生成物</h4>
+            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.asProduct}</h4>
             <div className="space-y-2">
               {molecule.reactions.asProduct.map((reaction, index) => (
                 <div key={index} className="p-2 rounded-lg bg-slate-800/50">
                   <p className="text-sm text-slate-300 font-mono">{reaction.equation}</p>
-                  <p className="text-xs text-slate-500 mt-1">条件: {reaction.conditions}</p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {language === 'zh' ? '条件' : 'Conditions'}: {reaction.conditions}
+                  </p>
                 </div>
               ))}
             </div>

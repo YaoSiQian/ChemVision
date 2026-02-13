@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { Atom, Bond, LonePair  } from '@/types/molecule';
-import { getElementData } from '@/data/moleculeDatabase';
+import { useElementData } from '@/data/moleculeDatabaseHooks';
 
 interface LewisStructureProps {
   atoms: Atom[];
@@ -28,230 +28,179 @@ export const LewisStructure: React.FC<LewisStructureProps> = ({
   const positionedAtoms = useMemo((): PositionedAtom[] => {
     if (atoms.length === 0) return [];
     
+    // 简单的2D投影算法
     const centerX = width / 2;
     const centerY = height / 2;
-    const bondLength = Math.min(width, height) / 4;
+    const scale = Math.min(width, height) / 6;
     
-    // 简单的布局算法
-    const positioned: PositionedAtom[] = [];
-    const visited = new Set<string>();
-    
-    // 找到中心原子（通常是第一个非氢原子或连接最多的原子）
-    let centerAtom = atoms.find((a) => a.element !== 'H') || atoms[0];
-    const connectionCount = (atomId: string) => 
-      bonds.filter((b) => b.atom1 === atomId || b.atom2 === atomId).length;
-    
-    const maxConnections = Math.max(...atoms.map((a) => connectionCount(a.id)));
-    const bestCenter = atoms.find((a) => connectionCount(a.id) === maxConnections);
-    if (bestCenter) centerAtom = bestCenter;
-    
-    // 放置中心原子
-    positioned.push({
-      ...centerAtom,
-      screenX: centerX,
-      screenY: centerY,
-    });
-    visited.add(centerAtom.id);
-    
-    // 放置连接的原子
-    const placeConnectedAtoms = (atomId: string, x: number, y: number, angleOffset: number) => {
-      const connectedBonds = bonds.filter((b) => b.atom1 === atomId || b.atom2 === atomId);
-      const angleStep = (2 * Math.PI) / connectedBonds.length;
+    return atoms.map((atom, index) => {
+      // 使用原子的x,y坐标进行投影
+      // 对于简单的分子，可以使用环形布局
+      let x: number, y: number;
       
-      connectedBonds.forEach((bond, index) => {
-        const connectedAtomId = bond.atom1 === atomId ? bond.atom2 : bond.atom1;
-        if (visited.has(connectedAtomId)) return;
-        
-        const connectedAtom = atoms.find((a) => a.id === connectedAtomId);
-        if (!connectedAtom) return;
-        
-        const angle = angleOffset + index * angleStep;
-        const newX = x + Math.cos(angle) * bondLength;
-        const newY = y + Math.sin(angle) * bondLength;
-        
-        positioned.push({
-          ...connectedAtom,
-          screenX: newX,
-          screenY: newY,
-        });
-        visited.add(connectedAtomId);
-        
-        // 递归放置（限制深度以避免复杂结构）
-        if (visited.size < 10) {
-          placeConnectedAtoms(connectedAtomId, newX, newY, angle + Math.PI);
-        }
-      });
-    };
-    
-    placeConnectedAtoms(centerAtom.id, centerX, centerY, 0);
-    
-    // 放置未连接的原子
-    atoms.forEach((atom) => {
-      if (!visited.has(atom.id)) {
-        positioned.push({
-          ...atom,
-          screenX: centerX + (Math.random() - 0.5) * bondLength * 2,
-          screenY: centerY + (Math.random() - 0.5) * bondLength * 2,
-        });
+      if (atoms.length === 1) {
+        // 单原子在中心
+        x = centerX;
+        y = centerY;
+      } else if (atoms.length === 2) {
+        // 双原子水平排列
+        const offset = index === 0 ? -scale : scale;
+        x = centerX + offset;
+        y = centerY;
+      } else if (atoms.length === 3) {
+        // 三原子三角形排列（如水分子）
+        const angle = (index * 120 - 90) * (Math.PI / 180);
+        x = centerX + Math.cos(angle) * scale;
+        y = centerY + Math.sin(angle) * scale * 0.8;
+      } else {
+        // 更多原子使用圆形布局
+        const angle = (index / atoms.length) * 2 * Math.PI;
+        x = centerX + Math.cos(angle) * scale * 1.5;
+        y = centerY + Math.sin(angle) * scale * 1.5;
       }
+      
+      return {
+        ...atom,
+        screenX: x,
+        screenY: y,
+      };
+    });
+  }, [atoms, width, height]);
+  
+  // 获取原子的连接关系
+  const atomConnections = useMemo(() => {
+    const connections: Record<string, string[]> = {};
+    
+    bonds.forEach((bond) => {
+      if (!connections[bond.atom1]) connections[bond.atom1] = [];
+      if (!connections[bond.atom2]) connections[bond.atom2] = [];
+      connections[bond.atom1].push(bond.atom2);
+      connections[bond.atom2].push(bond.atom1);
     });
     
-    return positioned;
-  }, [atoms, bonds, width, height]);
-
-  // 获取原子位置
-  const getAtomPosition = (atomId: string): { x: number; y: number } | null => {
-    const atom = positionedAtoms.find((a) => a.id === atomId);
-    return atom ? { x: atom.screenX, y: atom.screenY } : null;
-  };
-
-  // 获取孤对电子位置
+    return connections;
+  }, [bonds]);
+  
+  // 获取原子的孤对电子位置
   const getLonePairPositions = (atomId: string): { x: number; y: number }[] => {
+    const lonePair = lonePairs.find((lp) => lp.atomId === atomId);
+    if (!lonePair) return [];
+    
     const atom = positionedAtoms.find((a) => a.id === atomId);
     if (!atom) return [];
     
-    const lp = lonePairs.find((l) => l.atomId === atomId);
-    if (!lp) return [];
+    const connectedAtoms = atomConnections[atomId] || [];
+    const angleStep = (2 * Math.PI) / (connectedAtoms.length + lonePair.count);
     
-    // 计算孤对电子的方向（远离化学键）
-    const connectedBonds = bonds.filter((b) => b.atom1 === atomId || b.atom2 === atomId);
-    const bondDirections = connectedBonds.map((bond) => {
-      const otherAtomId = bond.atom1 === atomId ? bond.atom2 : bond.atom1;
-      const otherAtom = positionedAtoms.find((a) => a.id === otherAtomId);
-      if (!otherAtom) return 0;
-      return Math.atan2(otherAtom.screenY - atom.screenY, otherAtom.screenX - atom.screenX);
+    return Array.from({ length: lonePair.count }, (_, i) => {
+      const angle = angleStep * (connectedAtoms.length + i);
+      return {
+        x: atom.screenX + Math.cos(angle) * 35,
+        y: atom.screenY + Math.sin(angle) * 35,
+      };
     });
-    
-    // 找到孤对电子的最佳位置（远离化学键）
-    const positions: { x: number; y: number }[] = [];
-    const radius = 25;
-    
-    for (let i = 0; i < lp.count * 2; i += 2) {
-      const angle = (i / (lp.count * 2)) * 2 * Math.PI;
-      // 检查是否与化学键方向冲突
-      const isConflict = bondDirections.some((dir) => 
-        Math.abs(dir - angle) < 0.5 || Math.abs(dir - angle - Math.PI) < 0.5
-      );
-      
-      const finalAngle = isConflict ? angle + Math.PI / 4 : angle;
-      
-      positions.push({
-        x: atom.screenX + Math.cos(finalAngle) * radius,
-        y: atom.screenY + Math.sin(finalAngle) * radius,
-      });
-      
-      positions.push({
-        x: atom.screenX + Math.cos(finalAngle) * radius + 8,
-        y: atom.screenY + Math.sin(finalAngle) * radius,
-      });
-    }
-    
-    return positions;
   };
-
+  
   // 渲染化学键
-  const renderBond = (bond: Bond) => {
-    const atom1Pos = getAtomPosition(bond.atom1);
-    const atom2Pos = getAtomPosition(bond.atom2);
-    
-    if (!atom1Pos || !atom2Pos) return null;
-    
-    const dx = atom2Pos.x - atom1Pos.x;
-    const dy = atom2Pos.y - atom1Pos.y;
-    const angle = Math.atan2(dy, dx);
-    
+  const renderBonds = () => {
     const bondElements: React.ReactNode[] = [];
     
-    if (bond.type === 'single') {
-      bondElements.push(
-        <line
-          key={bond.id}
-          x1={atom1Pos.x}
-          y1={atom1Pos.y}
-          x2={atom2Pos.x}
-          y2={atom2Pos.y}
-          stroke="#94a3b8"
-          strokeWidth="3"
-          strokeLinecap="round"
-          className="lewis-bond"
-        />
-      );
-    } else if (bond.type === 'double') {
-      const offset = 4;
-      const perpX = -Math.sin(angle) * offset;
-      const perpY = Math.cos(angle) * offset;
+    for (let i = 0; i < bonds.length; i++) {
+      const bond = bonds[i];
+      const atom1 = positionedAtoms.find((a) => a.id === bond.atom1);
+      const atom2 = positionedAtoms.find((a) => a.id === bond.atom2);
       
-      bondElements.push(
-        <g key={bond.id}>
-          <line
-            x1={atom1Pos.x + perpX}
-            y1={atom1Pos.y + perpY}
-            x2={atom2Pos.x + perpX}
-            y2={atom2Pos.y + perpY}
-            stroke="#94a3b8"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            className="lewis-bond"
-          />
-          <line
-            x1={atom1Pos.x - perpX}
-            y1={atom1Pos.y - perpY}
-            x2={atom2Pos.x - perpX}
-            y2={atom2Pos.y - perpY}
-            stroke="#94a3b8"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            className="lewis-bond"
-          />
-        </g>
-      );
-    } else if (bond.type === 'triple') {
-      const offset = 5;
-      const perpX = -Math.sin(angle) * offset;
-      const perpY = Math.cos(angle) * offset;
+      if (!atom1 || !atom2) continue;
       
-      bondElements.push(
-        <g key={bond.id}>
+      if (bond.type === 'single') {
+        bondElements.push(
           <line
-            x1={atom1Pos.x}
-            y1={atom1Pos.y}
-            x2={atom2Pos.x}
-            y2={atom2Pos.y}
-            stroke="#94a3b8"
-            strokeWidth="2"
-            strokeLinecap="round"
-            className="lewis-bond"
+            key={`bond-${i}`}
+            x1={atom1.screenX}
+            y1={atom1.screenY}
+            x2={atom2.screenX}
+            y2={atom2.screenY}
+            stroke="#64748b"
+            strokeWidth="3"
           />
-          <line
-            x1={atom1Pos.x + perpX}
-            y1={atom1Pos.y + perpY}
-            x2={atom2Pos.x + perpX}
-            y2={atom2Pos.y + perpY}
-            stroke="#94a3b8"
-            strokeWidth="2"
-            strokeLinecap="round"
-            className="lewis-bond"
-          />
-          <line
-            x1={atom1Pos.x - perpX}
-            y1={atom1Pos.y - perpY}
-            x2={atom2Pos.x - perpX}
-            y2={atom2Pos.y - perpY}
-            stroke="#94a3b8"
-            strokeWidth="2"
-            strokeLinecap="round"
-            className="lewis-bond"
-          />
-        </g>
-      );
+        );
+      } else if (bond.type === 'double') {
+        // 双线表示双键
+        const dx = atom2.screenX - atom1.screenX;
+        const dy = atom2.screenY - atom1.screenY;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        const offset = 4;
+        
+        const perpX = (-dy / length) * offset;
+        const perpY = (dx / length) * offset;
+        
+        bondElements.push(
+          <g key={`bond-${i}`}>
+            <line
+              x1={atom1.screenX + perpX}
+              y1={atom1.screenY + perpY}
+              x2={atom2.screenX + perpX}
+              y2={atom2.screenY + perpY}
+              stroke="#64748b"
+              strokeWidth="2"
+            />
+            <line
+              x1={atom1.screenX - perpX}
+              y1={atom1.screenY - perpY}
+              x2={atom2.screenX - perpX}
+              y2={atom2.screenY - perpY}
+              stroke="#64748b"
+              strokeWidth="2"
+            />
+          </g>
+        );
+      } else if (bond.type === 'triple') {
+        // 三线表示三键
+        const dx = atom2.screenX - atom1.screenX;
+        const dy = atom2.screenY - atom1.screenY;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        const offset = 5;
+        
+        const perpX = (-dy / length) * offset;
+        const perpY = (dx / length) * offset;
+        
+        bondElements.push(
+          <g key={`bond-${i}`}>
+            <line
+              x1={atom1.screenX}
+              y1={atom1.screenY}
+              x2={atom2.screenX}
+              y2={atom2.screenY}
+              stroke="#64748b"
+              strokeWidth="2"
+            />
+            <line
+              x1={atom1.screenX + perpX}
+              y1={atom1.screenY + perpY}
+              x2={atom2.screenX + perpX}
+              y2={atom2.screenY + perpY}
+              stroke="#64748b"
+              strokeWidth="2"
+            />
+            <line
+              x1={atom1.screenX - perpX}
+              y1={atom1.screenY - perpY}
+              x2={atom2.screenX - perpX}
+              y2={atom2.screenY - perpY}
+              stroke="#64748b"
+              strokeWidth="2"
+            />
+          </g>
+        );
+      }
     }
     
     return bondElements;
   };
-
-  // 渲染原子
-  const renderAtom = (atom: PositionedAtom) => {
-    const elementData = getElementData(atom.element);
+  
+  // 渲染原子 - Now uses reactive hook
+  const AtomComponent = ({ atom }: { atom: PositionedAtom }) => {
+    const elementData = useElementData(atom.element as any);
     const color = atom.color || elementData?.color || '#94a3b8';
     const lonePairPositions = getLonePairPositions(atom.id);
     
@@ -273,56 +222,43 @@ export const LewisStructure: React.FC<LewisStructureProps> = ({
           y={atom.screenY}
           textAnchor="middle"
           dominantBaseline="central"
-          fill="white"
+          fill="#1e293b"
           fontSize="14"
           fontWeight="600"
-          fontFamily="Inter, sans-serif"
         >
           {atom.element}
         </text>
         
         {/* 孤对电子 */}
-        {lonePairPositions.map((pos, index) => (
-          <circle
-            key={`${atom.id}-lp-${index}`}
-            cx={pos.x}
-            cy={pos.y}
-            r="3"
-            fill="#6366f1"
-            className="lewis-lone-pair"
-          />
+        {lonePairPositions.map((pos, idx) => (
+          <g key={`lp-${atom.id}-${idx}`}>
+            <circle
+              cx={pos.x}
+              cy={pos.y}
+              r="3"
+              fill="#a855f7"
+            />
+          </g>
         ))}
       </g>
     );
   };
-
+  
   return (
-    <div className={`relative ${className}`} style={{ width, height }}>
-      <svg
-        width={width}
-        height={height}
-        className="rounded-lg"
-        style={{ background: 'transparent' }}
-      >
-        {/* 化学键 */}
-        {bonds.map((bond) => renderBond(bond))}
-        
-        {/* 原子 */}
-        {positionedAtoms.map((atom) => renderAtom(atom))}
-      </svg>
+    <svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      className={`lewis-structure ${className}`}
+    >
+      {/* 化学键 */}
+      {renderBonds()}
       
-      {/* 图例 */}
-      <div className="absolute bottom-2 left-2 flex items-center gap-3 text-xs text-slate-400">
-        <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-indigo-500" />
-          <span>孤对电子</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="w-4 h-0.5 bg-slate-400" />
-          <span>共价键</span>
-        </div>
-      </div>
-    </div>
+      {/* 原子 */}
+      {positionedAtoms.map((atom) => (
+        <AtomComponent key={atom.id} atom={atom} />
+      ))}
+    </svg>
   );
 };
 

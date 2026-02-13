@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLanguage } from '@/i18n';
 import { Search, X, Sparkles, History } from 'lucide-react';
 import { getFormulaSuggestions } from '@/utils/moleculeParser';
 
@@ -13,6 +14,7 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
   isLoading = false,
   className = '',
 }) => {
+  const { t, language } = useLanguage();
   const [input, setInput] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -20,7 +22,7 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // 加载最近搜索
+  // Load recent searches
   useEffect(() => {
     const saved = localStorage.getItem('recentSearches');
     if (saved) {
@@ -28,14 +30,14 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
     }
   }, []);
   
-  // 保存最近搜索
+  // Save recent search
   const saveRecentSearch = (formula: string) => {
     const updated = [formula, ...recentSearches.filter((s) => s !== formula)].slice(0, 5);
     setRecentSearches(updated);
     localStorage.setItem('recentSearches', JSON.stringify(updated));
   };
   
-  // 处理输入变化
+  // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInput(value);
@@ -50,7 +52,7 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
     }
   };
   
-  // 处理搜索
+  // Handle search
   const handleSearch = (formula: string) => {
     if (!formula.trim()) return;
     
@@ -60,13 +62,13 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
     onSearch(formula);
   };
   
-  // 处理表单提交
+  // Handle form submit
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSearch(input);
   };
   
-  // 清除输入
+  // Clear input
   const handleClear = () => {
     setInput('');
     setSuggestions([]);
@@ -74,7 +76,7 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
     inputRef.current?.focus();
   };
   
-  // 点击外部关闭建议
+  // Close suggestions on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -90,12 +92,12 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
     <div ref={containerRef} className={`relative ${className}`}>
       <form onSubmit={handleSubmit}>
         <div className="relative">
-          {/* 搜索图标 */}
+          {/* Search icon */}
           <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
             <Search className="w-5 h-5" />
           </div>
           
-          {/* 输入框 */}
+          {/* Input field */}
           <input
             ref={inputRef}
             type="text"
@@ -105,12 +107,12 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
               if (input.length > 0) setShowSuggestions(true);
               if (input.length === 0 && recentSearches.length > 0) setShowSuggestions(true);
             }}
-            placeholder="输入分子式（如：H2O, CO2, CH4）"
+            placeholder={t.searchPlaceholder}
             className="w-full h-14 pl-12 pr-24 bg-slate-800/80 backdrop-blur-xl border border-slate-700 rounded-2xl text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
             disabled={isLoading}
           />
           
-          {/* 清除按钮 */}
+          {/* Clear button */}
           {input && (
             <button
               type="button"
@@ -121,7 +123,7 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
             </button>
           )}
           
-          {/* 搜索按钮 */}
+          {/* Search button */}
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
@@ -132,22 +134,22 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
             ) : (
               <>
                 <Sparkles className="w-4 h-4" />
-                <span>分析</span>
+                <span>{t.searchButton}</span>
               </>
             )}
           </button>
         </div>
       </form>
       
-      {/* 建议下拉框 */}
+      {/* Suggestions dropdown */}
       {showSuggestions && (suggestions.length > 0 || (input.length === 0 && recentSearches.length > 0)) && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800/95 backdrop-blur-xl border border-slate-700 rounded-xl overflow-hidden shadow-2xl z-50">
-          {/* 最近搜索 */}
+          {/* Recent searches */}
           {input.length === 0 && recentSearches.length > 0 && (
             <div className="p-2">
               <div className="flex items-center gap-2 px-3 py-2 text-xs text-slate-500">
                 <History className="w-3 h-3" />
-                <span>最近搜索</span>
+                <span>{language === 'zh' ? '最近搜索' : 'Recent Searches'}</span>
               </div>
               {recentSearches.map((search, index) => (
                 <button
@@ -162,11 +164,11 @@ export const MoleculeSearch: React.FC<MoleculeSearchProps> = ({
             </div>
           )}
           
-          {/* 搜索建议 */}
+          {/* Search suggestions */}
           {suggestions.length > 0 && (
             <div className="p-2">
               <div className="px-3 py-2 text-xs text-slate-500">
-                建议
+                {language === 'zh' ? '建议' : 'Suggestions'}
               </div>
               {suggestions.map((suggestion, index) => (
                 <button
