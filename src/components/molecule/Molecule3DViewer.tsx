@@ -291,7 +291,7 @@ export const Molecule3DViewer: React.FC<Molecule3DViewerProps> = ({
         ref={canvasRef}
         width={width}
         height={height}
-        className="cursor-grab active:cursor-grabbing rounded-lg"
+        className="cursor-grab active:cursor-grabbing rounded-[20px]"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -303,7 +303,7 @@ export const Molecule3DViewer: React.FC<Molecule3DViewerProps> = ({
       <div className="absolute bottom-3 right-3 flex gap-2">
         <button
           onClick={resetView}
-          className="p-2 glass rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+          className="p-2 bg-surface-container bg-opacity-80 rounded-[20px] text-foreground hover:text-white hover:bg-white/10 transition-colors"
           title="Reset View"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -313,7 +313,7 @@ export const Molecule3DViewer: React.FC<Molecule3DViewerProps> = ({
       </div>
       
       {/* 缩放指示器 */}
-      <div className="absolute bottom-3 left-3 px-2 py-1 glass rounded text-xs text-slate-400">
+      <div className="absolute bottom-3 left-3 px-2 py-1 bg-surface-container bg-opacity-80 rounded text-xs text-on-surface-variant">
         {Math.round(zoom * 100)}%
       </div>
     </div>

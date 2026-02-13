@@ -61,16 +61,19 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
   
   if (isLoading) {
     return (
-      <section className="min-h-screen flex items-center justify-center px-4">
-        <div className="text-center">
+      <section className="relative min-h-screen flex items-center justify-center px-4 bg-background overflow-hidden">
+        {/* 有机模糊装饰 */}
+        <div aria-hidden="true" className="absolute bottom-1/4 -left-40 w-[400px] h-[400px] bg-secondary-container/12 rounded-full blur-3xl mix-blend-multiply" />
+        
+        <div className="relative text-center">
           <div className="relative w-24 h-24 mx-auto mb-6">
-            <div className="absolute inset-0 border-4 border-indigo-500/20 rounded-full" />
-            <div className="absolute inset-0 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-            <div className="absolute inset-4 border-4 border-purple-500/20 rounded-full" />
-            <div className="absolute inset-4 border-4 border-purple-500 border-b-transparent rounded-full animate-spin reverse" />
+            <div className="absolute inset-0 border-4 border-md-primary/20 rounded-full" />
+            <div className="absolute inset-0 border-4 border-md-primary border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-4 border-4 border-tertiary/20 rounded-full" />
+            <div className="absolute inset-4 border-4 border-tertiary border-b-transparent rounded-full animate-spin" style={{animationDirection: 'reverse'}} />
           </div>
-          <h2 className="text-2xl font-semibold text-white mb-2">{t.analyzing}</h2>
-          <p className="text-slate-400">{language === 'zh' ? '请稍候，我们正在生成3D模型和理化性质数据' : 'Please wait while we generate the 3D model and property data'}</p>
+          <h2 className="text-2xl font-medium text-foreground mb-2">{t.analyzing}</h2>
+          <p className="text-on-surface-variant">{language === 'zh' ? '请稍候，我们正在生成3D模型和理化性质数据' : 'Please wait while we generate the 3D model and property data'}</p>
         </div>
       </section>
     );
@@ -78,14 +81,18 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
   
   if (error) {
     return (
-      <section className="min-h-screen flex items-center justify-center px-4">
-        <div className="text-center max-w-md">
+      <section className="relative min-h-screen flex items-center justify-center px-4 bg-background overflow-hidden">
+        {/* 有机模糊装饰 */}
+        <div aria-hidden="true" className="absolute top-20 -left-32 w-[480px] h-[480px] bg-md-primary/10 rounded-full blur-3xl mix-blend-multiply" />
+        <div aria-hidden="true" className="absolute -bottom-40 right-1/3 w-[400px] h-[400px] bg-secondary-container/12 rounded-full blur-3xl mix-blend-multiply" />
+        
+        <div className="relative text-center max-w-md">
           <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center">
-            <AlertCircle className="w-10 h-10 text-red-400" />
+            <AlertCircle className="w-10 h-10 text-red-500" />
           </div>
-          <h2 className="text-2xl font-semibold text-white mb-2">{t.analysisError}</h2>
-          <p className="text-slate-400 mb-6">{error}</p>
-          <p className="text-sm text-slate-500">
+          <h2 className="text-2xl font-medium text-foreground mb-2">{t.analysisError}</h2>
+          <p className="text-on-surface-variant mb-6">{error}</p>
+          <p className="text-sm text-on-surface-variant">
             {language === 'zh' ? '请尝试输入其他分子式，如 H2O、CO2、CH4、NH3、C2H5OH 等' : 'Try other formulas like H2O, CO2, CH4, NH3, C2H5OH, etc.'}
           </p>
         </div>
@@ -98,18 +105,22 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
   }
   
   return (
-    <section className="min-h-screen py-12 px-4">
-      <div className="max-w-7xl mx-auto">
+    <section className="relative min-h-screen py-12 px-4 bg-background overflow-hidden">
+      {/* 有机模糊装饰 / Organic blur shapes */}
+      <div aria-hidden="true" className="absolute -top-40 left-1/4 w-[480px] h-[480px] bg-md-primary/10 rounded-full blur-3xl mix-blend-multiply transform -translate-x-1/4 -translate-y-1/2" />
+      <div aria-hidden="true" className="absolute bottom-0 -right-40 w-[400px] h-[400px] bg-secondary-container/12 rounded-full blur-3xl mix-blend-multiply" />
+      
+      <div className="relative max-w-7xl mx-auto">
         {/* 结果标题 / Result Title */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/20 rounded-full text-indigo-300 text-sm mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-md-primary/20 rounded-full text-md-primary text-300 text-sm mb-4">
             <Info className="w-4 h-4" />
             <span>{language === 'zh' ? '分析完成' : 'Analysis Complete'}</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+          <h2 className="text-3xl md:text-4xl font-medium text-foreground mb-2">
             {molecule.name}
           </h2>
-          <p className="text-xl text-indigo-400 font-mono">{molecule.formula}</p>
+          <p className="text-xl text-md-primary text-400 font-mono">{molecule.formula}</p>
         </div>
         
         {/* 同分异构体选择器 / Isomer Selector */}
@@ -132,10 +143,10 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
               <div className="flex gap-2">
                 <button
                   onClick={() => setViewMode('3d')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-[20px] transition-all ${
                     viewMode === '3d'
-                      ? 'bg-indigo-500 text-white'
-                      : 'bg-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-md-primary text-white'
+                      : 'bg-surface-container-low text-on-surface-variant hover:text-white'
                   }`}
                 >
                   <Box className="w-4 h-4" />
@@ -143,10 +154,10 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
                 </button>
                 <button
                   onClick={() => setViewMode('lewis')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-[20px] transition-all ${
                     viewMode === 'lewis'
-                      ? 'bg-indigo-500 text-white'
-                      : 'bg-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-md-primary text-white'
+                      : 'bg-surface-container-low text-on-surface-variant hover:text-white'
                   }`}
                 >
                   <Layers className="w-4 h-4" />
@@ -158,7 +169,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
                 <div className="flex gap-2">
                   <button
                     onClick={toggleViewerMode}
-                    className="p-2 bg-slate-800 text-slate-400 hover:text-white rounded-lg transition-colors"
+                    className="p-2 bg-surface-container-low text-on-surface-variant hover:text-white rounded-[20px] transition-colors"
                     title={viewerSettings.mode === 'ball-stick' 
                       ? (language === 'zh' ? '切换到比例模型' : 'Switch to space-fill model')
                       : (language === 'zh' ? '切换到球棍模型' : 'Switch to ball-stick model')
@@ -168,10 +179,10 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
                   </button>
                   <button
                     onClick={toggleLabels}
-                    className={`p-2 rounded-lg transition-colors ${
+                    className={`p-2 rounded-[20px] transition-colors ${
                       viewerSettings.showLabels
-                        ? 'bg-indigo-500 text-white'
-                        : 'bg-slate-800 text-slate-400 hover:text-white'
+                        ? 'bg-md-primary text-white'
+                        : 'bg-surface-container-low text-on-surface-variant hover:text-white'
                     }`}
                     title={language === 'zh' ? '显示/隐藏标签' : 'Show/Hide labels'}
                   >
@@ -182,7 +193,7 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
             </div>
             
             {/* 可视化区域 / Visualization Area */}
-            <div className="glass-card p-4 aspect-square flex items-center justify-center">
+            <div className="bg-surface-container rounded-[24px] shadow-sm p-4 aspect-square flex items-center justify-center">
               {viewMode === '3d' ? (
                 <Molecule3DViewer
                   atoms={molecule.structure.atoms}
@@ -205,14 +216,14 @@ export const ResultSection: React.FC<ResultSectionProps> = ({
             </div>
             
             {/* 视图说明 / View Instructions */}
-            <div className="glass-card p-4">
-              <h4 className="text-sm font-medium text-slate-300 mb-2">
+            <div className="bg-surface-container rounded-[24px] shadow-sm p-4">
+              <h4 className="text-sm font-medium text-foreground mb-2">
                 {viewMode === '3d' 
                   ? (language === 'zh' ? '3D模型控制' : '3D Model Controls')
                   : (language === 'zh' ? '路易斯结构式说明' : 'Lewis Structure Guide')
                 }
               </h4>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-on-surface-variant">
                 {viewMode === '3d' ? (
                   <>
                     • {language === 'zh' ? '拖动鼠标旋转分子' : 'Drag to rotate'}<br />

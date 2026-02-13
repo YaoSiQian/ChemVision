@@ -126,26 +126,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   }, []);
   
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden bg-background">
       {/* 背景画布 */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 pointer-events-none"
       />
       
-      {/* 渐变背景 */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-900 pointer-events-none" />
-      
-      {/* 装饰元素 */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl" />
+      {/* 渐变与有机模糊装饰（Material You 风格） */}
+      <div aria-hidden="true" className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-md-primary/12 rounded-full blur-3xl mix-blend-multiply transform -translate-x-1/4" />
+      <div aria-hidden="true" className="absolute top-24 right-1/4 w-56 h-56 bg-tertiary/12 rounded-full blur-3xl mix-blend-multiply" />
       
       {/* 内容 */}
-      <div className="relative z-10 w-full max-w-3xl mx-auto text-center">
+      <div className="relative z-10 w-full max-w-4xl mx-auto text-center">
+        <div className="bg-surface-container p-8 rounded-[48px] shadow-md">
         {/* Logo/图标 */}
         <div className="flex justify-center mb-8">
           <div className="relative">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-indigo-500/30">
+            <div className="w-20 h-20 rounded-[32px] bg-gradient-to-br from-md-primary 500 to-tertiary 600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
               <Atom className="w-10 h-10 text-white" />
             </div>
             <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -155,12 +153,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
         
         {/* 标题 / Title */}
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+        <h1 className="text-4xl md:text-6xl font-medium mb-4 leading-tight">
           <span className="text-gradient">{t.heroTitle}</span>
         </h1>
         
         {/* 副标题 / Subtitle */}
-        <p className="text-lg md:text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
+        <p className="text-lg md:text-xl text-on-surface-variant mb-8 max-w-2xl mx-auto">
           {t.heroSubtitle}
         </p>
         
@@ -175,7 +173,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <button
               key={formula}
               onClick={() => onSearch(formula)}
-              className="px-4 py-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 hover:border-indigo-500/50 rounded-full text-sm text-slate-300 hover:text-white transition-all flex items-center gap-2"
+              className="px-6 py-2 bg-secondary-container text-secondary-container-foreground rounded-full text-sm transition-all hover:shadow-md active:scale-95 flex items-center gap-2"
             >
               <Beaker className="w-3 h-3" />
               {formula}
@@ -190,7 +188,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <span>{t.feature3DTitle}</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-indigo-500 rounded-full" />
+            <div className="w-2 h-2 bg-md-primary rounded-full" />
             <span>{t.featureLewisTitle}</span>
           </div>
           <div className="flex items-center gap-2">
@@ -202,9 +200,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       
       {/* 滚动提示 */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-slate-600 rounded-full flex justify-center pt-2">
-          <div className="w-1 h-2 bg-slate-400 rounded-full" />
+        <div className="w-6 h-10 border-2 border-outline rounded-full flex justify-center pt-2 bg-transparent">
+          <div className="w-1 h-2 bg-on-surface-variant rounded-full" />
         </div>
+      </div>
       </div>
     </section>
   );

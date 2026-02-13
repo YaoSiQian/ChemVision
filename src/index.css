@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,26 +6,52 @@
 
 @layer base {
   :root {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 217 33% 17%;
-    --card-foreground: 210 40% 98%;
-    --popover: 217 33% 17%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 239 84% 67%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 263 70% 50%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 22%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 263 70% 50%;
-    --accent-foreground: 210 40% 98%;
+    /* Material You (Purple/Violet seed) - tonal surface system */
+    --background: 320 100% 99%; /* #FFFBFE */
+    --foreground: 260 6% 11%;   /* #1C1B1F */
+
+    --md-primary: 257 34% 48%;
+    --primary: var(--md-primary);
+    --primary-foreground: 0 0% 100%; /* white */
+
+    --secondary-container: 263 65% 92%; /* #E8DEF8 */
+    --secondary-container-foreground: 273 30% 12%; /* #1D192B */
+
+    --tertiary: 338 13% 43%; /* #7D5260 */
+
+    --surface-container: 280 28% 95%; /* #F3EDF7 */
+    --surface-container-low: 280 18% 92%; /* #E7E0EC */
+
+    --outline: 270 6% 47%; /* #79747E */
+    --on-surface-variant: 270 8% 29%; /* #49454F */
+
+    /* Interaction / system */
+    --border: var(--outline);
+    --input: 280 18% 92%;
+    --ring: var(--md-primary);
+
+    /* Radii (Material You generous rounding) */
+    --radius-xs: 8px;
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 48px;
+    --radius: 1.5rem; /* default used by components */
+    /* Backwards compatibility mappings for existing components */
+    --card: var(--surface-container);
+    --card-foreground: var(--on-surface-variant);
+    --popover: var(--surface-container);
+    --popover-foreground: var(--on-surface-variant);
+    --primary: var(--md-primary);
+    --primary-foreground: var(--primary-foreground);
+    --secondary: 263 70% 50%; /* fallback */
+    --secondary-foreground: var(--secondary-container-foreground);
+    --muted: 270 6% 85%;
+    --muted-foreground: 270 6% 45%;
+    --accent: var(--md-primary);
+    --accent-foreground: var(--primary-foreground);
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 25%;
-    --input: 217 33% 25%;
-    --ring: 239 84% 67%;
-    --radius: 0.75rem;
+    --destructive-foreground: 0 0% 100%;
   }
 }
 
@@ -38,10 +64,61 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+  }
+
+  /* Global element defaults to nudge existing markup toward Material You */
+  button {
+    @apply rounded-full transition-all duration-300 active:scale-95 ease-out;
+  }
+
+  button:focus-visible {
+    @apply ring-2 ring-offset-2;
+    outline: none;
+  }
+
+  input[type="text"], input[type="search"], input:not([type]), textarea, select {
+    @apply bg-surface-container-low border-0 border-b-2 border-outline h-14 rounded-t-[12px] rounded-bl-none rounded-br-none px-4 py-2 text-base transition-colors duration-200 outline-none;
+  }
+
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
+    @apply border-b-2 border-primary ring-0;
+  }
+
+  /* Generic card helper for legacy markup */
+  .card, [data-slot="card"] {
+    @apply bg-surface-container text-on-surface-variant flex flex-col gap-6 rounded-[24px] shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] p-6;
+  }
+
+  /* Accessibility: Respect user motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Accessibility: High contrast support */
+  @media (prefers-contrast: more) {
+    :root {
+      --md-primary: 257 50% 40%;
+      --foreground: 260 10% 5%;
+    }
+    
+    button, input, textarea, select, [role="button"] {
+      border-width: 2px;
+    }
+  }
+
+  /* Accessibility: Focus visible for all interactive elements */
+  :focus-visible {
+    outline: 3px solid hsl(var(--md-primary));
+    outline-offset: 2px;
   }
 }
 

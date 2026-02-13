@@ -34,19 +34,19 @@ const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   const [isOpen, setIsOpen] = useState(defaultOpen);
   
   return (
-    <div className="glass-card overflow-hidden">
+    <div className="bg-surface-container rounded-[24px] overflow-hidden shadow-sm">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-md-primary/5 transition-colors duration-200"
       >
         <div className="flex items-center gap-3">
-          <div className="text-indigo-400">{icon}</div>
-          <span className="font-medium text-slate-200">{title}</span>
+          <div className="text-md-primary">{icon}</div>
+          <span className="font-medium text-foreground">{title}</span>
         </div>
         {isOpen ? (
-          <ChevronUp className="w-4 h-4 text-slate-400" />
+          <ChevronUp className="w-4 h-4 text-on-surface-variant" />
         ) : (
-          <ChevronDown className="w-4 h-4 text-slate-400" />
+          <ChevronDown className="w-4 h-4 text-on-surface-variant" />
         )}
       </button>
       
@@ -69,11 +69,11 @@ const DataRow: React.FC<DataRowProps> = ({ label, value, unit }) => {
   if (value === undefined || value === null) return null;
   
   return (
-    <div className="flex justify-between items-center py-2 border-b border-slate-700/50 last:border-0">
-      <span className="text-slate-400 text-sm">{label}</span>
-      <span className="text-slate-200 text-sm font-medium">
+    <div className="flex justify-between items-center py-2 border-b border-outline/50 last:border-0">
+      <span className="text-on-surface-variant text-sm">{label}</span>
+      <span className="text-foreground text-sm font-medium">
         {typeof value === 'number' ? value.toFixed(2) : value}
-        {unit && <span className="text-slate-500 ml-1">{unit}</span>}
+        {unit && <span className="text-on-surface-variant ml-1">{unit}</span>}
       </span>
     </div>
   );
@@ -141,11 +141,11 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
   return (
     <div className={`space-y-4 ${className}`}>
       {/* 基本信息 / Basic Information */}
-      <div className="glass-card p-4">
-        <h2 className="text-xl font-semibold text-white mb-1">{molecule.name}</h2>
-        <p className="text-indigo-400 text-sm font-mono mb-2">{molecule.formula}</p>
-        <p className="text-slate-400 text-sm">{molecule.iupacName}</p>
-        <p className="text-slate-300 text-sm mt-3 leading-relaxed">{molecule.description}</p>
+      <div className="bg-surface-container rounded-[24px] p-4 shadow-sm">
+        <h2 className="text-xl font-medium text-foreground mb-1">{molecule.name}</h2>
+        <p className="text-md-primary text-sm font-mono mb-2">{molecule.formula}</p>
+        <p className="text-on-surface-variant text-sm">{molecule.iupacName}</p>
+        <p className="text-foreground text-sm mt-3 leading-relaxed">{molecule.description}</p>
       </div>
       
       {/* 电子结构 / Electronic Structure */}
@@ -213,18 +213,18 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       <CollapsibleSection title={t.spectralData} icon={<Radio className="w-5 h-5" />}>
         <div className="space-y-3">
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.irSpectrum}</h4>
+            <h4 className="text-sm font-medium text-foreground mb-2">{t.irSpectrum}</h4>
             <div className="space-y-1">
               {molecule.spectral.irPeaks.map((peak, index) => (
                 <div key={index} className="flex justify-between items-center py-1 text-sm">
-                  <span className="text-slate-400">{peak.wavenumber} cm⁻¹</span>
-                  <span className="text-slate-300">{peak.bondType}</span>
+                  <span className="text-on-surface-variant">{peak.wavenumber} cm⁻¹</span>
+                  <span className="text-foreground">{peak.bondType}</span>
                   <span className={`px-2 py-0.5 rounded text-xs ${
                     peak.intensity === 'Strong' || peak.intensity === 'Very Strong' 
-                      ? 'bg-indigo-500/30 text-indigo-300'
+                      ? 'bg-md-primary/20 text-md-primary'
                       : peak.intensity === 'Medium'
-                      ? 'bg-slate-600/30 text-slate-300'
-                      : 'bg-slate-700/30 text-slate-400'
+                      ? 'bg-secondary-container/30 text-foreground'
+                      : 'bg-md-primary/5 text-on-surface-variant'
                   }`}>
                     {peak.intensity}
                   </span>
@@ -234,15 +234,15 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </div>
           
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.massSpectrum}</h4>
+            <h4 className="text-sm font-medium text-foreground mb-2">{t.massSpectrum}</h4>
             <div className="space-y-1">
               {molecule.spectral.msPeaks.map((peak, index) => (
                 <div key={index} className="flex justify-between items-center py-1 text-sm">
-                  <span className="text-slate-400">m/z {peak.mz}</span>
-                  <span className="text-slate-300">{peak.fragment}</span>
+                  <span className="text-on-surface-variant">m/z {peak.mz}</span>
+                  <span className="text-foreground">{peak.fragment}</span>
                   <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                      className="h-full bg-gradient-to-r from-md-primary 500 to-tertiary 500"
                       style={{ width: `${peak.relativeIntensity}%` }}
                     />
                   </div>
@@ -257,8 +257,8 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       <CollapsibleSection title={t.safetyInfo} icon={<Shield className="w-5 h-5" />}>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-2">
-            <div className="p-2 rounded-lg bg-slate-800/50">
-              <span className="text-xs text-slate-400 block mb-1">{t.toxicityLevel}</span>
+            <div className="p-2 rounded-[20px] bg-surface-container-low">
+              <span className="text-xs text-on-surface-variant block mb-1">{t.toxicityLevel}</span>
               <span className={`text-sm font-medium ${
                 molecule.safety.toxicityLevel === 'Low' ? 'text-green-400' :
                 molecule.safety.toxicityLevel === 'Moderate' ? 'text-yellow-400' :
@@ -267,8 +267,8 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 {getToxicityLabel(molecule.safety.toxicityLevel)}
               </span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50">
-              <span className="text-xs text-slate-400 block mb-1">{t.flammability}</span>
+            <div className="p-2 rounded-[20px] bg-surface-container-low">
+              <span className="text-xs text-on-surface-variant block mb-1">{t.flammability}</span>
               <span className={`text-sm font-medium ${
                 molecule.safety.flammability === 'None' ? 'text-green-400' :
                 molecule.safety.flammability === 'Low' ? 'text-yellow-400' :
@@ -277,8 +277,8 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 {getFlammabilityLabel(molecule.safety.flammability)}
               </span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50">
-              <span className="text-xs text-slate-400 block mb-1">{t.reactivity}</span>
+            <div className="p-2 rounded-[20px] bg-surface-container-low">
+              <span className="text-xs text-on-surface-variant block mb-1">{t.reactivity}</span>
               <span className={`text-sm font-medium ${
                 molecule.safety.reactivity === 'Stable' ? 'text-green-400' :
                 molecule.safety.reactivity === 'Unstable' ? 'text-yellow-400' : 'text-red-400'
@@ -286,9 +286,9 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 {getReactivityLabel(molecule.safety.reactivity)}
               </span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-800/50">
-              <span className="text-xs text-slate-400 block mb-1">{t.biodegradability}</span>
-              <span className="text-sm font-medium text-slate-300">
+            <div className="p-2 rounded-[20px] bg-surface-container-low">
+              <span className="text-xs text-on-surface-variant block mb-1">{t.biodegradability}</span>
+              <span className="text-sm font-medium text-foreground">
                 {molecule.safety.biodegradability}
               </span>
             </div>
@@ -296,7 +296,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           
           {molecule.safety.hazards.length > 0 && molecule.safety.hazards[0] !== 'None' && (
             <div>
-              <h4 className="text-sm font-medium text-slate-300 mb-2">{t.hazards}</h4>
+              <h4 className="text-sm font-medium text-foreground mb-2">{t.hazards}</h4>
               <div className="flex flex-wrap gap-2">
                 {molecule.safety.hazards.map((hazard, index) => (
                   <span 
@@ -316,12 +316,12 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       <CollapsibleSection title={t.applications} icon={<Beaker className="w-5 h-5" />}>
         <div className="space-y-3">
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.industrial}</h4>
+            <h4 className="text-sm font-medium text-foreground mb-2">{t.industrial}</h4>
             <div className="flex flex-wrap gap-2">
               {molecule.applications.industrial.map((app, index) => (
                 <span 
                   key={index}
-                  className="px-2 py-1 bg-indigo-500/20 text-indigo-300 text-xs rounded-full"
+                  className="px-2 py-1 bg-md-primary/20 text-md-primary text-xs rounded-full"
                 >
                   {app}
                 </span>
@@ -330,7 +330,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </div>
           
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.research}</h4>
+            <h4 className="text-sm font-medium text-foreground mb-2">{t.research}</h4>
             <div className="flex flex-wrap gap-2">
               {molecule.applications.research.map((app, index) => (
                 <span 
@@ -344,12 +344,12 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </div>
           
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.everyday}</h4>
+            <h4 className="text-sm font-medium text-foreground mb-2">{t.everyday}</h4>
             <div className="flex flex-wrap gap-2">
               {molecule.applications.everyday.map((app, index) => (
                 <span 
                   key={index}
-                  className="px-2 py-1 bg-slate-600/30 text-slate-300 text-xs rounded-full"
+                  className="px-2 py-1 bg-secondary-container/30 text-foreground text-xs rounded-full"
                 >
                   {app}
                 </span>
@@ -363,11 +363,11 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       <CollapsibleSection title={t.reactions} icon={<FlaskConical className="w-5 h-5" />}>
         <div className="space-y-3">
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.asReactant}</h4>
+            <h4 className="text-sm font-medium text-foreground mb-2">{t.asReactant}</h4>
             <div className="space-y-2">
               {molecule.reactions.asReactant.map((reaction, index) => (
-                <div key={index} className="p-2 rounded-lg bg-slate-800/50">
-                  <p className="text-sm text-slate-300 font-mono">{reaction.equation}</p>
+                <div key={index} className="p-2 rounded-[20px] bg-surface-container-low">
+                  <p className="text-sm text-foreground font-mono">{reaction.equation}</p>
                   <p className="text-xs text-slate-500 mt-1">
                     {language === 'zh' ? '条件' : 'Conditions'}: {reaction.conditions}
                   </p>
@@ -377,11 +377,11 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </div>
           
           <div>
-            <h4 className="text-sm font-medium text-slate-300 mb-2">{t.asProduct}</h4>
+            <h4 className="text-sm font-medium text-foreground mb-2">{t.asProduct}</h4>
             <div className="space-y-2">
               {molecule.reactions.asProduct.map((reaction, index) => (
-                <div key={index} className="p-2 rounded-lg bg-slate-800/50">
-                  <p className="text-sm text-slate-300 font-mono">{reaction.equation}</p>
+                <div key={index} className="p-2 rounded-[20px] bg-surface-container-low">
+                  <p className="text-sm text-foreground font-mono">{reaction.equation}</p>
                   <p className="text-xs text-slate-500 mt-1">
                     {language === 'zh' ? '条件' : 'Conditions'}: {reaction.conditions}
                   </p>

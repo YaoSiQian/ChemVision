@@ -194,12 +194,12 @@ function AppContent() {
       {/* Toast notifications */}
       <Toaster 
         position="top-right" 
-        theme="dark"
+        theme="light"
         toastOptions={{
           style: {
-            background: '#1e293b',
-            border: '1px solid #334155',
-            color: '#f8fafc',
+            background: 'hsl(280 28% 95%)',
+            border: '1px solid hsl(270 6% 47%)',
+            color: 'hsl(260 6% 11%)',
           },
         }}
       />

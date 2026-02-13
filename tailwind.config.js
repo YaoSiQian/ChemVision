@@ -48,6 +48,23 @@ module.exports = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        /* Material You tokens (aliases) */
+        'md-primary': {
+          DEFAULT: "hsl(var(--md-primary) / <alpha-value>)",
+          foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
+        },
+        'surface-container': {
+          DEFAULT: "hsl(var(--surface-container) / <alpha-value>)",
+        },
+        'surface-container-low': {
+          DEFAULT: "hsl(var(--surface-container-low) / <alpha-value>)",
+        },
+        'secondary-container': {
+          DEFAULT: "hsl(var(--secondary-container) / <alpha-value>)",
+          foreground: "hsl(var(--secondary-container-foreground) / <alpha-value>)",
+        },
+        outline: "hsl(var(--outline) / <alpha-value>)",
+        'on-surface-variant': "hsl(var(--on-surface-variant) / <alpha-value>)",
       },
       borderRadius: {
         xl: "calc(var(--radius) + 4px)",
@@ -58,6 +75,9 @@ module.exports = {
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        'md-elev-1': '0 2px 8px rgba(16,24,40,0.06)',
+        'md-elev-2': '0 6px 24px rgba(16,24,40,0.08)',
+        'md-elev-3': '0 12px 48px rgba(16,24,40,0.10)',
       },
       keyframes: {
         "accordion-down": {
